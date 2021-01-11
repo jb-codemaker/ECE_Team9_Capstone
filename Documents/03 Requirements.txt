@@ -1,0 +1,26 @@
+See Lecture 2 notes:
+
+• Problem identification, Need, Objective
+– Understand customer needs
+– Validate them
+– Communicate them to the design team
+
+• Requirements
+– What does it do
+– May have performance requirements
+– May indicate how to deal with errors
+
+• External specifications
+– Part of the high-level design
+– Concept of operations
+– The user interface
+– Specifies how errors will be dealt with
+– Will usually include performance metrics
+
+• Internal specifications
+– Describes subsystems/modules
+– Their interfaces
+
+• Implementation
+– Code, Schematics, Board Layout
+– A program to sort an input file
