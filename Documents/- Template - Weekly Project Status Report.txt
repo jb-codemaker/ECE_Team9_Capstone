@@ -19,3 +19,19 @@ Early warning of problems/issues
 
 Plan/commit for immediate next steps and alerts others (motivation)
 – “Oh, Susan’s going to need my spec by next week if she’s to remain on schedule”
+
+Binning activities:
+easy, medium, hard
+
+CAT server space?  Possibly later.
+
+Local solution for now.
+
+Simple web interface feasibility?
+
+Stretch goal. GPU?  Web server?
+
+
+
+
+
