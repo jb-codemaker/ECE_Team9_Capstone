@@ -1,0 +1,54 @@
+timestamp, slide #, word count
+00:08:32, 2, 48
+
+
+Dataset: Slide #, Word Count across time
+
+"Slide # and Word Count Across time Dataset"
+
+video model
+"Slide # and Text Word Count across time Dataset"
+00:00:00 slide 1, Text word count 49
+00:02:00 slide 2, Text word count 24
+00:03:00 slide 3, Text word count 67
+00:04:00 slide 4, Text word count 18
+
+audio model
+"Word pace across time Dataset"
+00:00:00 WPM 27
+00:02:00 WPM 32
+00:03:00 WPM 12
+00:04:00 WPM 49
+
+speaking pace analyzer
+Slide 1 WPM 27
+Slide 2 WPM 32
+Slide 3 WPM 12
+Slide 4 WPM 49
+
+01:12:32 slide 37   200 words
+
+00:00:00 0 students paying attention
+00:08:32 27% students paying attention
+00:09:48 12% 
+00:10:08 03% 
+
+Friday @ 4pm
+
+[comes from] dataset (goes to)
+
+(3) [video model] Slide # and Text Word Count across time Dataset (slide analyzer)
+[video model] Slide # and Text Word Count across time Dataset (speaking pace analyzer)
+[video model] Student attentiveness across time Dataset (interaction analyzer)
+[video model] Student Questions across time Dataset (interaction analyzer)
+(2) [slide analyzer] Total Slide Count (visualizer)
+(4) [slide analyzer] Average Slide pace (visualizer)
+
+[audio model] Word pace across time Dataset (speaking pace analyzer)
+[audio model] Student Questions across time Dataset (interaction analyzer)
+
+(5) [speaking pace analyzer] Speaking pace across slide # (visualizer)
+(7) [interaction analyzer] Student Questions across slide # (visualizer)
+(6) [interaction analyzer] Total Student Questions (visualizer)
+
+
