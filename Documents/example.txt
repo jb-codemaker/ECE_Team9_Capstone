@@ -37,6 +37,14 @@ Friday @ 4pm
 
 [comes from] dataset (goes to)
 
+[Professor Camera] Camera Front File (Demuxer)
+[Student Camera] Camera Back File (Demuxer)
+
+[Demuxer] Front Video File (Video model)
+[Demuxer] Back Video File (Video model)
+[Demuxer] Front Audio File (Audio model)
+[Demuxer] Back Audio File (Audio model)
+
 (3) [video model] Slide # and Text Word Count across time Dataset (slide analyzer)
 [video model] Slide # and Text Word Count across time Dataset (speaking pace analyzer)
 [video model] Student attentiveness across time Dataset (interaction analyzer)
