@@ -1,0 +1,136 @@
+ADIRU_requirements_Rev4.txt
+
+By Chris Andrews, Kayla Seliner, Mark Craig, Trang Nguyen
+2012-01-23
+
+	Rev4  Added reference numbers to all requirements. -Chris 
+
+Preliminary requirements document for the ADIRU project.
+
+
+Design 
+ 
+1.1		Must distinguish between transient and permanent faults.
+1.2		Must exhibit triple modular or 4 modular redundancy architecture with respect to uC - Sensor architecture is triplicated.
+1.3		Must exhibit byzantine fault tolerance.
+1.4		Must tolerate fail silent faults.
+1.5		Must demonstrate that faults are recognized and diagnosed.
+1.6		Must tolerate X faults at one time.
+1.7		Must be able to program different voting strategies (start with median value select).
+1.8		Must be able to implement time logged averages for voting purposes.
+1.9		Must be able to determine state of each uC and Voter in system.
+1.10		Must be able to introduce faults into system.
+1.11		Must be able to mask faults.
+1.12		Must be able to reconfigure system after detecting and masking fault.
+1.13		Must be modular and expandable to support additional redundancy in systems.
+1.14		Must be able to implement additional sensors in system (expandability).
+1.15		Must log flight data for later analysis (at X Hz).  
+1.16		Must provide simple available interface for accessing data (USB port, memory SW must be "open source")
+1.17		Must make each redundant system identical.
+1.18		Must have method of synchronizing clocks from different uC.
+1.19		Must follow open source guidelines for presentation of ADIRU documentation.
+1.20		Must log sensor, uC, Voting outputs at X Hz. 
+1.21		Should separate layers of fault tolerant system with well defined APIs.  
+1.22		Should hide voting methods and redundancy of lower levels from higher levels.
+1.23		Should maintain clearly defined inputs and outputs between layers of system.  
+1.24		Should maintain severability of different systems to maximum extent possible (i.e. the bus architecture functions independent of uC choice or sensor types; each sensor system can be severed as a module distinct from the system).
+1.25		Should avoid implementing bit level error correction techniques. 
+1.26		Should have bus access to the ADIRU for real time I/O and debugging on the lab table.
+1.27		May use inference between different sensor types to diagnose faults.
+
+Bus
+2.1		Must be expandable to include additional sensors and duplication.
+2.2		Should use Bus protector, Bus fabric architecture or some other method of redundancy/fault masking.
+2.3		Should use a bus system compatible with the COTS electronics hardware.
+2.4		May avoid patented bus protocols if these entail significant cost/ legal problems.
+
+Sensors
+3.1		Must implement Airspeed indicator.
+3.2		Must implement Gyroscope.
+3.3		Must implement GPS.
+3.4		Must implement altimeter.
+3.5		Should implement Inertial Navigation System (INS).
+3.6		May implement magnetometer (primary reason to control INS drift).
+3.7		May implement Angle of Attack (AoA) sensor.
+
+Mechanical
+4.1		Must be light enough to become payload in our aircraft.
+4.2		Must have easy and fast accessibility to ADIRU within the airframe.
+4.3		Must be able to remove ADIRU from aircraft and test (independent power supply).
+4.4		Should have a flight system that can be tested within city limits.
+4.5		Should utilize COTS (Common Off The Shelf) materials and components.
+4.6		Should have schematics specified and designed using metric system.
+4.7		Should have working mechanical files in a CAD program (solidworks).
+4.8		Should minimize the amount of cables and standardize cables and connections when this is not possible.
+
+Software
+5.1		Must be written in an “open source” language like C, etc.
+5.2		Must record and store flight data in a fully recoverable format.
+5.3		Must time stamp flight data.
+5.4		Must represent flight data in a format that can be interpretted immediately in the field.
+5.5		Must have a method to program  SW faults in the field.
+5.6		Should use common database structures to store flight data.
+5.7		Should have all HW systems programmable in one language.
+5.8		May utilize data compression techniques in storage.
+
+
+Cost
+6.1		Must keep a budget document.
+6.2		Should cost 500.00 or less.  (this will be liable to change.  We are making a list of Arduino components right now and will use that to come up with a budget estimate by next week).
+
+Reliability
+7.1		Must be crash survivable.
+7.2		Must operate in moisture, rain and dew, environmental conditions.
+7.3		Must operate in max/min cabin temperature range.
+
+Electronics
+8.1		Must choose electronics that run within voltage/current/power specifications of the power system.
+8.2		Should use one family of microcontrollers throughout system.
+8.3		Should use COTS components that will continue to be supported.
+8.4		Should utilize components with several BUS interfaces possible (for design flexibility).
+
+Aircraft
+9.1		Must be repairable (after crash landings).
+9.2		Must have an electric motor to enable operation within city limits.
+9.3		Should be easy to fly.
+9.4		Should have a flight duration of at least 10 minutes.  
+
+Documentation
+10.1	Must document source code, schematics and mechanical designs such that project results may be reproducible.
+10.2	Must have a wiki that is supported into the future (how many years?).
+10.3	Should utilize widely available formats for publishing (i.e. CAD schematics printed as .pdf because Solidworks is $$$ and not generally available).			
+
+Legal
+11.1	Must observe patent laws.
+
+Power
+12.1	Must have reliable power system for ADIRU (as this is not a redundant system).
+12.2	Must have a system that is field chargeable. 
+12.3	Must operate for a minimum of 10 minutes on a full battery charge.
+
+Safety
+13.1	Must use due caution with respect to aircraft flight when testing.  
+13.2	Must have no exposed wires.
+13.3	Must not contain any harmful or explosive materials.
+13.4	Must be able to survive crashes.
+13.5	Must be able to operate in rain (inboard of the aircraft).
+
+Usability
+14.1	Must not exceed a weight of X pounds.
+14.2	Must have the physical space and payload capacity for X additional redundant systems.
+14.3	Must be able to support/add X redundant sensors.
+14.4	Must be able to readily display, analyze and interpret data.
+14.5	Should implement programming language and documentation consistent for use of this project as a research test bed.  
+
+
+
+
+
+
+Definitions
+
+	COTS:  Common Off The Shelf components are easy to acquire and generally inexpensive and easy to implement in a design.
+	GPS:   Global Positioning System.
+	AoA:   Angle of Attack sensor to detect angle between airspeed vector and pitch of aircraft.
+	INS:   Inertial Navigation System encompassing gyroscopes and accelerometers.
+
