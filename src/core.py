@@ -22,6 +22,9 @@ def gray_video():
     cap.release()
     cv2.destroyAllWindows()
 
+# TODO: Clone https://github.com/tyiannak/pyAudioAnalysis.git
+#       Audio analysis tool
+
 if __name__ == '__main__':
     gray_video()
 
