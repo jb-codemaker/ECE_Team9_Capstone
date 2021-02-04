@@ -1,27 +1,50 @@
 import cv2
+import os
 
-def gray_video():
-    """captures a webcam stream and turns it gray. Hit ESC to quit
-
-
+def video_stream():
+    """captures a webcam stream, finds your face, makes it look cool. Hit q to quit hit b to activate
+    
+    
     """
-    ## TODO(#7): instead of using a webcam play video from file
-    cap = cv2.VideoCapture(0) # the zero means you can capture multiple cameras
+    path = os.getcwd()
+    face_cascade = cv2.CascadeClassifier(path + '/data/haarcascade_frontalface_default.xml')
+    
+    activate = False
+    capture = cv2.VideoCapture(0)
     
     while(True):
         
-        ret, frame = cap.read()
+        ret, frame = capture.read()
         
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         
-        cv2.imshow('frame',gray)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        faces = face_cascade.detectMultiScale(
+            gray,
+            scaleFactor  = 1.1,
+            minNeighbors = 5,
+            minSize      = (30, 30),
+            flags        = cv2.CASCADE_SCALE_IMAGE
+        )
+        
+        for (x, y, w, h) in faces:
+            if activate:
+                mask = frame[y:y+h+10, x:x+w+10]
+                blur_mask = cv2.GaussianBlur(mask,(23,23),30)
+                thresh = cv2.threshold(blur_mask,127,255,cv2.THRESH_BINARY_INV)[1]
+                frame[y:y+blur_mask.shape[0],x:x+blur_mask.shape[1]] = thresh
+            
+        cv2.imshow('video',frame)
+        
+        keyboard_input = cv2.waitKey(1) & 0xFF
+        if keyboard_input == ord("b"):
+            activate = not activate
+        if keyboard_input == ord("q"):
             break
-
-
-    cap.release()
+        
+        
+    capture.release()
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    gray_video()
+    video_stream()
 
