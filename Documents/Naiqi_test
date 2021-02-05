@@ -1,19 +1,1 @@
 This is main branch
-print('Hello, are you a professor? (Enter Yes or No)')
-spam = input()
-while spam != 'Yes':
-    print('Goodbye.')
-    spam = input()
-print('What is your last name?')
-LN = input()
-print('Which school are you teaching in?')
-school = input()
-while len(school) == 0:
-    print('Please enter your school:')
-    school = input()
-print('Which subject are you teaching?')
-subject = input()
-while len(subject) == 0:
-    print('Please enter your subject:')
-    subject = input()
-print('Thank you, Professor ' + str(LN) + '!')
