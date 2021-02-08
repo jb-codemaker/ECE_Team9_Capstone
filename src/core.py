@@ -6,16 +6,16 @@ def video_stream():
     
     
     """
+    i = 0
     path = os.getcwd()
     face_cascade = cv2.CascadeClassifier(path + '/data/haarcascade_frontalface_default.xml')
     
-    activate = False
+    activate = True
     capture = cv2.VideoCapture(0)
     
     while(True):
         
         ret, frame = capture.read()
-        
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         
         faces = face_cascade.detectMultiScale(
@@ -28,11 +28,22 @@ def video_stream():
         
         for (x, y, w, h) in faces:
             if activate:
-                mask = frame[y:y+h+10, x:x+w+10]
-                blur_mask = cv2.GaussianBlur(mask,(23,23),30)
+                mask = frame[y:y+h+30, x:x+w+30]
+                gray = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+                blur_mask = cv2.GaussianBlur(gray,(23,23),30)
                 thresh = cv2.threshold(blur_mask,127,255,cv2.THRESH_BINARY_INV)[1]
-                frame[y:y+blur_mask.shape[0],x:x+blur_mask.shape[1]] = thresh
-            
+                contours = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2]
+                
+                blur_for_inv = cv2.GaussianBlur(mask, (23,23), 30)
+                thresh_for_inv = cv2.threshold(blur_for_inv,127,255,cv2.THRESH_BINARY_INV)[1]
+                frame[y:y+blur_mask.shape[0],x:x+blur_mask.shape[1]] = thresh_for_inv
+                
+                for c in contours:
+                    cv2.drawContours(frame, [c], 0, (0,255,0), 3)
+                    cv2.drawContours(mask, [c], 0, (0, 0, 255), 3)
+                
+                
+                cv2.circle(frame,(447,63), 63, (0,0,255), -1)
         cv2.imshow('video',frame)
         
         keyboard_input = cv2.waitKey(1) & 0xFF
@@ -47,4 +58,3 @@ def video_stream():
 
 if __name__ == '__main__':
     video_stream()
-
