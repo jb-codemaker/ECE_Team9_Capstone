@@ -42,7 +42,7 @@ with sr.AudioFile(LONG_AUDIO_FILE) as source:
 print('\nTesting Sphinx...\n')
 
 r = sr.Recognizer()
-with sr.AudioFile(LONG_AUDIO_FILE) as source:
+with sr.AudioFile(AUDIO_FILE) as source:
     audio = r.record(source)  # read the entire audio file
 
 # recognize speech using Sphinx
