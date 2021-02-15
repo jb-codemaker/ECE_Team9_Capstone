@@ -31,6 +31,10 @@ def split(file_name, perspective):
     os.system('ffmpeg -i '+ '"' + parent_file  + '"' +' -c copy -an '+ '"' + data_directory + delimiter + perspective + '-output-video.mp4'  + '"' + ' -hide_banner -loglevel error')
 
 if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        print("\nFile and Perspective 1 or 2 is needed")
+        sys.exit()
     file_name = sys.argv[1]
     perspective = sys.argv[2]
     split(file_name, perspective)
+    print("\nSplit function complete\n")
