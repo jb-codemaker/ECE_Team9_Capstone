@@ -8,7 +8,8 @@ def video_stream():
     """
     i = 0
     path = os.getcwd()
-    face_cascade = cv2.CascadeClassifier(path + '/data/haarcascade_frontalface_default.xml')
+    print(path)
+    face_cascade = cv2.CascadeClassifier('/home/leo/Projects/ECE_Team9_Capstone/data/haarcascade_frontalface_default.xml')
     
     activate = True
     capture = cv2.VideoCapture(0)
@@ -39,11 +40,11 @@ def video_stream():
                 frame[y:y+blur_mask.shape[0],x:x+blur_mask.shape[1]] = thresh_for_inv
                 
                 for c in contours:
-                    cv2.drawContours(frame, [c], 0, (0,255,0), 3)
+                    #cv2.drawContours(frame, [c], 0, (0,255,0), 3)
                     cv2.drawContours(mask, [c], 0, (0, 0, 255), 3)
                 
                 
-                cv2.circle(frame,(447,63), 63, (0,0,255), -1)
+                #cv2.circle(frame,(447,63), 63, (0,0,255), -1)
         cv2.imshow('video',frame)
         
         keyboard_input = cv2.waitKey(1) & 0xFF
