@@ -37,7 +37,8 @@ def split(file_name, perspective):
     if os.path.exists(data_directory + delimiter + perspective + '-output-video.mp4'):
         os.remove(data_directory + delimiter + perspective + '-output-video.mp4')
 
-    ## Buy mp4 audio.... os.system('ffmpeg -i '+ '"' + parent_file + '"' + ' -vn -acodec copy '+ '"' + data_directory + delimiter + perspective + '-output-audio.mp4'  + '"' + ' -hide_banner -loglevel error')
+    ## Buy mp4 audio.... 
+    # os.system('ffmpeg -i '+ '"' + parent_file + '"' + ' -vn -acodec copy '+ '"' + data_directory + delimiter + perspective + '-output-audio.mp4'  + '"' + ' -hide_banner -loglevel error')
     #ffmpeg -i input.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 output.wav
     os.system('ffmpeg -i '+ '"' + parent_file + '"' + ' -vn -acodec pcm_s16le -ar 44100 -ac 2 '+ '"' + data_directory + delimiter + perspective + '-output-audio.wav'  + '"' + ' -hide_banner -loglevel error')
     os.system('ffmpeg -i '+ '"' + parent_file  + '"' +' -c copy -an '+ '"' + data_directory + delimiter + perspective + '-output-video.mp4'  + '"' + ' -hide_banner -loglevel error')
