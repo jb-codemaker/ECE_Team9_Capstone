@@ -4,6 +4,7 @@
 *.mov
 *.json
 *.wav
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
