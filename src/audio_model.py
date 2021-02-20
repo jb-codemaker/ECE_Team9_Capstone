@@ -23,7 +23,7 @@ from pydub import AudioSegment
 from pydub.utils import make_chunks
 
 import csv
-import string   #For
+import string
 
 from datetime import datetime
 
@@ -43,14 +43,10 @@ with open('audio_data_csv.csv', mode='w', newline='') as audio_data_csv:
     audio_data_csv_writer.writerow(['Translator', 'Minute', 'Speaker', 'WPM', 'Text'])
 
 
-
-
 now = datetime.now()
 
 current_time = now.strftime("%H:%M:%S")
 print("Start of Google Time =", current_time)
-
-
 
 #######  Google test #############
 i = 0
@@ -86,14 +82,11 @@ for chunk in chunks:
     i += 1
 ############ End Google test ###########
 
-
+# Print time delta without decimals
+process_duration = str(datetime.now() - now).split('.')[0]
+print('\nGoogle took ', process_duration, ' to process')
 
 now = datetime.now()
-
-current_time = now.strftime("%H:%M:%S")
-print("End of Google Time =", current_time)
-
-
 
 ############ Testing Sphinx ##########
 i = 0
@@ -129,12 +122,12 @@ for chunk in chunks:
 
 ######### End sphinx test ##########
 
-now = datetime.now()
+# Print time delta without decimals
+process_duration = str(datetime.now() - now).split('.')[0]
+print('\nSphinx took ', process_duration, ' to process')
 
-current_time = now.strftime("%H:%M:%S")
-print("End of Sphinx Time =", current_time)
 
-
+# speaker discrimination / diarization
 
 
 '''
