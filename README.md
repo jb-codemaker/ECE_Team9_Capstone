@@ -7,7 +7,7 @@ Our sponsor, Christof Teuscher is an Alan Turing enthusiast and avid runner.  Hi
 This project will allow a user, such as a professor, to record their lecture and their student’s response to different moments within that lecture.  These recordings will be uploaded and processed. The user will receive a report back from this program that describes to them how their students responded to different moments throughout that lecture (description detailed in “Requirements”).  The user can then use this feedback to modify their future teaching behaviors to maximize student interaction or student attentiveness in accordance with their goals and repeat the analysis.
 
 Our project must have the ability to receive and analyze one full-length class lecture recording from two perspectives.  These perspectives must include the professor with their presented materials and the student audience.  These recordings will be processed by a program that must be able to analyze those two recordings and produce a visualization, containing information outlined below, in a form where a non-technical user can glean informative feedback.  This feedback will describe the user’s teaching behavior across time and the commensurate effects of those changes on the student audience.
-
+## word
 ![Block Diagram](./Images/Block_Diagram.PNG)
 
 [Proposal Document](https://docs.google.com/document/d/1YcNP2XVLgDVtbruc-ptutkXsHnPfJws35ECDuVT-Fk0/edit?usp=sharing)
