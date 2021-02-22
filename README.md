@@ -8,6 +8,6 @@ This project will allow a user, such as a professor, to record their lecture and
 
 Our project must have the ability to receive and analyze one full-length class lecture recording from two perspectives.  These perspectives must include the professor with their presented materials and the student audience.  These recordings will be processed by a program that must be able to analyze those two recordings and produce a visualization, containing information outlined below, in a form where a non-technical user can glean informative feedback.  This feedback will describe the user’s teaching behavior across time and the commensurate effects of those changes on the student audience.
 
-![Block Diagram](Images/Block_Diagram.png)
+![Block Diagram](./Images/Block_Diagram.png)
 
 [Proposal Document](https://docs.google.com/document/d/1YcNP2XVLgDVtbruc-ptutkXsHnPfJws35ECDuVT-Fk0/edit?usp=sharing)
