@@ -16,8 +16,7 @@ from os import path
 
 import speech_recognition as sr # Hidden Markov Model (HMM), deep neural network model
 
-#import sphinxbase
-import pocketsphinx
+import sphinxbase
 
 from pydub import AudioSegment
 from pydub.utils import make_chunks
@@ -27,7 +26,8 @@ import string
 
 from datetime import datetime
 
-AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio-original.wav')
+#AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio-original.wav')
+AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio.wav')
 
 myaudio = AudioSegment.from_file(AUDIO_FILE , "wav") 
 chunk_length_ms = 60000 # pydub calculates in millisec
@@ -42,6 +42,45 @@ with open('audio_data_csv.csv', mode='w', newline='') as audio_data_csv:
     audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     audio_data_csv_writer.writerow(['Translator', 'Minute', 'Speaker', 'WPM', 'Text'])
 
+'''
+##------------------resemblyzer---------#####
+
+from resemblyzer import preprocess_wav, VoiceEncoder
+from demo_utils import *
+from pathlib import Path
+
+## Get reference audios
+wav = preprocess_wav(AUDIO_FILE)
+
+# Cut some segments from single speakers as reference audio
+# Speaker times are in seconds [beginning, end]
+segments = [[1, 5]]
+speaker_names = ["A"]
+speaker_wavs = [wav[int(s[0] * 16000):int(s[1] * 16000)] for s in segments]
+  
+    
+# Rate of 16, meaning that an 
+# embedding is generated every 0.0625 seconds. It is good to have a higher rate for speaker 
+# diarization, but it is not so useful for when you only need a summary
+# Forcing this on CPU, because it uses a lot of RAM and most GPUs 
+# won't have enough. There's a speed drawback, but it remains reasonable.
+encoder = VoiceEncoder("cpu")
+print("Running the continuous embedding on cpu, this might take a while...")
+_, cont_embeds, wav_splits = encoder.embed_utterance(wav, return_partials=True, rate=16)
+
+
+# Get the continuous similarity for every speaker. It amounts to a dot product between the 
+# embedding of the speaker and the continuous embedding of the interview
+speaker_embeds = [encoder.embed_utterance(speaker_wav) for speaker_wav in speaker_wavs]
+similarity_dict = {name: cont_embeds @ speaker_embed for name, speaker_embed in 
+                   zip(speaker_names, speaker_embeds)}
+
+
+## Run the interactive demo
+interactive_diarization(similarity_dict, wav, wav_splits)
+##--------------------- end resemblyzer----------###
+'''
+
 
 now = datetime.now()
 
@@ -53,6 +92,10 @@ i = 0
 print ("-------------------------------------------------")
 print ("Testing google's offline recognizer with chunks")
 print ("-------------------------------------------------")
+set_ambient_noise = True
+
+#sr out of for chunk scope to retain ambient noise levels
+r = sr.Recognizer()
 for chunk in chunks:
     #chunk_silent = AudioSegment.silent(duration = 10)
     #audio_chunk = chunk_silent + chunk + chunk_silent
@@ -60,19 +103,26 @@ for chunk in chunks:
     filename = 'chunk'+str(i)+'.wav'
     print("Processing minute "+str(i))
     file = filename
-    r = sr.Recognizer()
+    #r = sr.Recognizer()
     with sr.AudioFile(file) as source:
-        #r.adjust_for_ambient_noise(source)
+        # Set ambient noise level on 1st chunk only
+        if set_ambient_noise:
+            r.adjust_for_ambient_noise(source, duration=2)
+            set_ambient_noise = False
         audio_listened = r.record(source)
     try:
-        rec = r.recognize_google(audio_listened)
+        rec = r.recognize_google(audio_listened, language='en-US', show_all=False)
         print (rec)
         word_count = str(rec).split()
         with open('audio_data_csv.csv', mode='a', newline='') as audio_data_csv:
             audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             audio_data_csv_writer.writerow(['Google', str(i), 'A', len(word_count), rec])
+    except sr.UnknownValueError:
+        print("Google Speech Recognition could not understand audio")
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
     except:
-        rec = r.recognize_google(audio_listened,show_all=True)
+        rec = r.recognize_google(audio_listened,)#show_all=True)
         print(rec,type(rec))
         word_count = str(rec).split()
         with open('audio_data_csv.csv', mode='a', newline='') as audio_data_csv:
@@ -111,6 +161,10 @@ for chunk in chunks:
         with open('audio_data_csv.csv', mode='a', newline='') as audio_data_csv:
             audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             audio_data_csv_writer.writerow(['Sphinx', str(i), 'A', len(word_count), rec])
+    except sr.UnknownValueError:
+        print("Sphinx could not understand audio")
+    except sr.RequestError as e:
+        print("Sphinx error; {0}".format(e))
     except:
         rec = r.recognize_sphinx(audio_listened,show_all=True)
         print(rec,type(rec))
@@ -128,98 +182,3 @@ print('\nSphinx took ', process_duration, ' to process')
 
 
 # speaker discrimination / diarization
-
-
-'''
-
-def load_chunks(filename):
-    long_audio = AudioSegment.from_wav(filename)
-    audio_chunks = split_on_silence(
-        long_audio, min_silence_len=1800,
-        silence_thresh=-17
-    )
-    return audio_chunks
-
-# Initialize recognizer class (for recognizing the speech)
-r = sr.Recognizer()
-
-# Reading Audio file as source
-# listening the audio file and store in audio_text variable
-
-
-with sr.AudioFile(AUDIO_FILE) as source:
-    
-    audio_text = r.listen(source)
-
-LONG_AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio-original.wav')
-with sr.AudioFile(LONG_AUDIO_FILE) as source:
-    
-    long_audio_text = r.listen(source)
-
-
-#######-----Sphinx---------#####
-# use the audio file as the audio source
-
-print('\nTesting Sphinx...\n')
-
-#r = sr.Recognizer()
-with sr.AudioFile(AUDIO_FILE) as source:
-    audio = r.record(source)  # read the entire audio file
-
-# recognize speech using Sphinx
-try:
-    print("Sphinx thinks you said " + r.recognize_sphinx(audio))
-except sr.UnknownValueError:
-    print("Sphinx could not understand audio")
-except sr.RequestError as e:
-    print("Sphinx error; {0}".format(e))
-
-#####------ End Sphinx test---------######
-
-
-#####------ Start Google test---------######
-# recoginize_() method will throw a request error if the API...
-# ... is unreachable, hence using exception handling
-print('\nTesting google speech...\n')
-
-try:
-    # using google speech recognition
-    text = r.recognize_google(audio_text)
-    print('Converting audio file into text.')
-    print(text)
-except:
-    print('Did not work.  Possibly file too large.  Try again.')
-#####------ End Google test---------######
-
-
-#####------ Start split google test---------######
-
-print('\nTesting google split file speech...\n')
-
-from pydub import AudioSegment
-from pydub.silence import split_on_silence
-
-AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio.wav')
-
-recognizer = sr.Recognizer()
-
-def load_chunks(filename):
-    long_audio = AudioSegment.from_wav(filename)
-    audio_chunks = split_on_silence(
-        long_audio, min_silence_len=1800,
-        silence_thresh=-17
-    )
-    return audio_chunks
-
-for audio_chunk in load_chunks(AUDIO_FILE):
-    audio_chunk.export("temp", format="wav")
-    with sr.AudioFile("temp") as source:
-        audio = recognizer.listen(source)
-        try:
-            text = recognizer.recognize_google(audio)
-            print("Chunk : {}".format(text))
-        except Exception as ex:
-            print("Error occured")
-            print(ex)
-#####------ End split google test---------######
-'''
