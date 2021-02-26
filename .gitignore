@@ -3,6 +3,10 @@
 *.mp4
 *.mov
 *.json
+*.wav
+*.csv
+*.xlsx
+*.xls
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
