@@ -11,3 +11,23 @@ Our project must have the ability to receive and analyze one full-length class l
 ![Block Diagram](./Images/Block_Diagram.PNG)
 
 [Proposal Document](https://docs.google.com/document/d/1YcNP2XVLgDVtbruc-ptutkXsHnPfJws35ECDuVT-Fk0/edit?usp=sharing)
+
+
+## Disclaimer
+This project is in active development. it is pre-alpha
+
+
+## Requirements
+This project was built with python 3.8 (it might work with over versions)
+
+This project was tested with Windows and Linux.
+
+[ffmpeg](https://ffmpeg.org/) needs to be installed and added to your [path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
+
+### Installation
+
+```
+git clone https://github.com/jb-codemaker/ECE_Team9_Capstone.git
+cd ECE_Team9_Capstone
+pip install -r requirements.txt
+```
