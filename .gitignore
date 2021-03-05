@@ -1,5 +1,13 @@
 # Bonus gitignores...
 *.log
+*.csv
+*.wav
+*.mp4
+*.mov
+*.json
+*.xlsx
+*.xls
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
