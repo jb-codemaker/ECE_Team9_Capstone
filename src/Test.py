@@ -1,7 +1,6 @@
 import pandas as pd
 from matplotlib import pyplot as plt
-
-
+import numpy as np
 # Enter CSV to process:
 word_count = pd.read_csv("data/Sample_csv.csv")
 
@@ -26,31 +25,28 @@ result = result.reset_index(drop=False)
 # Replace NaN values with zeroes:
 result.fillna(0, inplace=True)
 result = result.astype(int)
-#print(result)
-
-# Label the plot
-fig, ax1 = plt.subplots()
-plt.grid()
-plt.title('Word numbers and Attentiveness')
 
 
-# Start to plot
-
-ax1.set_xlabel('Minutes',)
+fig, (ax1, ax3) = plt.subplots(2)
+ax1.plot(result['index'], result['AWPM'],color ='black',label = 'Professor')
+ax1.set_title('Professor Word Count')
+ax1.set_xlabel('Minutes')
 ax1.set_ylabel('Word/Min')
-ax1.plot(result['index'], result['AWPM'],label = 'Professor')
-ax1.plot(result['index'], result['BWPM'],label = 'Students')
 
-# Put legend on plot
-plt.legend(loc = (0,1.05))
-
-#Plot Attentiveness using different y-axis
-ax2=ax1.twinx()
-
+ax2 = ax1.twinx()
 ax2.set_ylabel('Attentiveness',color ='green')
-ax2.plot(word_count['Minute'],word_count['Attentiveness'],'-*', color = 'green',label = 'Attentiveness')
+ax2.tick_params(axis='y', colors='green')
+ax2.plot(word_count['Minute'],word_count['Attentiveness'], color = 'green',label = 'Attentiveness')
 
-# Put legend on plot
-plt.legend(loc = (0,1))
+ax3.plot(result['index'], result['BWPM'],color ='black',label = 'Students')
+ax3 .set_title('Students Word Count')
+ax3.set_xlabel('Minutes')
+ax3.set_ylabel('Word/Min')
 
+ax4 = ax3.twinx()
+ax4.set_ylabel('Attentiveness',color ='green')
+ax4.tick_params(axis='y', colors='green')
+ax4.plot(word_count['Minute'],word_count['Attentiveness'], color = 'green',label = 'Attentiveness')
+
+fig.tight_layout()
 plt.show()
