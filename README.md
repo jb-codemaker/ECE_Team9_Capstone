@@ -7,6 +7,7 @@ Our sponsor, Christof Teuscher is an Alan Turing enthusiast and avid runner.  Hi
 
 ## Description
 This project will allow a user, such as a professor, to record their lecture and their student’s response to different moments within that lecture. These recordings will be uploaded and processed. The user will receive a report back from this program that describes to them how their students responded to different moments throughout that lecture (description detailed in “Requirements”). The user can then use this feedback to modify their future teaching behaviors to maximize student interaction or student attentiveness in accordance with their goals and repeat the analysis.
+![Block Diagram](/Images/Block_Diagram.PNG)
 
 
 ## Badges
