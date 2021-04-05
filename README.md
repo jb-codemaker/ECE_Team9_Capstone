@@ -35,6 +35,11 @@ cd ECE_Team9_Capstone
 pip install -r requirements.txt
 ```
 
+## Geting started
+
+
+## Example
+
 
 ## Usage
 
