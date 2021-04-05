@@ -46,10 +46,6 @@ pip install -r requirements.txt
 
 
 ## Support
-lwg@pdx.edu,
-blazek@pdx.edu,
-jinghan2@pdx.edu,
-naiqi@pdx.edu
 
 
 ## Development
