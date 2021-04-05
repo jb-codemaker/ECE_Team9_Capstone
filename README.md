@@ -49,7 +49,7 @@ pip install -r requirements.txt
 lwg@pdx.edu,
 blazek@pdx.edu,
 jinghan2@pdx.edu,
-[Naiqi Yao](naiqi@pdx.edu)
+naiqi@pdx.edu
 
 
 ## Development
