@@ -27,14 +27,8 @@ result.fillna(0, inplace=True)
 result = result.astype(int)
 
 
-<<<<<<< HEAD
 
 # Start to plot
-=======
-fig, (ax1, ax3) = plt.subplots(2)
-ax1.plot(result['index'], result['AWPM'],color ='black',label = 'Professor')
-ax1.set_title('Professor Word Count')
->>>>>>> 1ca929624d171ed2716bbcb1432db121dea98b20
 ax1.set_xlabel('Minutes')
 ax1.set_ylabel('Word/Min')
 
