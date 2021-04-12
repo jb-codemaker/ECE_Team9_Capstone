@@ -34,9 +34,10 @@ plt.grid()
 plt.title('Word numbers and Attentiveness')
 
 
-# Start to plot
 
-ax1.set_xlabel('Minutes',)
+
+# Start to plot
+ax1.set_xlabel('Minutes')
 ax1.set_ylabel('Word/Min')
 ax1.plot(result['index'], result['AWPM'],label = 'Professor')
 ax1.plot(result['index'], result['BWPM'],label = 'Students')
