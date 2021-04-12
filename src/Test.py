@@ -40,6 +40,7 @@ ax2.set_ylabel('Attentiveness',color ='green')
 ax2.tick_params(axis='y', colors='green')
 ax2.plot(word_count['Minute'],word_count['Attentiveness'], color = 'green',label = 'Attentiveness')
 
+fig, ax3 = plt.subplots()
 ax3.plot(result['index'], result['BWPM'],color ='black',label = 'Students')
 ax3 .set_title('Students Word Count')
 ax3.set_xlabel('Minutes')
