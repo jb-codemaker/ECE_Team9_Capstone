@@ -27,6 +27,9 @@ result.fillna(0, inplace=True)
 result = result.astype(int)
 
 
+fig, ax1 = plt.subplots()
+plt.grid()
+plt.title('Word numbers and Attentiveness')
 
 # Start to plot
 ax1.set_xlabel('Minutes')
