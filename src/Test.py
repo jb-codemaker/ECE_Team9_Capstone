@@ -1,8 +1,9 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
+from matplotlib.widgets import CheckButtons
 # Enter CSV to process:
-word_count = pd.read_csv("data/Sample_csv.csv")
+word_count = pd.read_csv(r"ECE_Team9_Capstone\data\Sample_csv.csv")
 
 #print(word_count)
 
@@ -34,22 +35,24 @@ plt.title('Word numbers and Attentiveness')
 # Start to plot
 ax1.set_xlabel('Minutes')
 ax1.set_ylabel('Word/Min')
+P1, = ax1.plot(result['index'], result['AWPM'],color ='red',label = 'Professor', visible = False)
+P2, = ax1.plot(result['index'], result['BWPM'],color ='blue',label = 'Students', visible = False)
 
 ax2 = ax1.twinx()
 ax2.set_ylabel('Attentiveness',color ='green')
-ax2.tick_params(axis='y', colors='green')
-ax2.plot(word_count['Minute'],word_count['Attentiveness'], color = 'green',label = 'Attentiveness')
+ax2.tick_params(axis='y')
+P3, = ax2.plot(word_count['Minute'],word_count['Attentiveness'], color = 'green',label = 'Attentiveness', visible = False)
+lines = [P1, P2, P3]
+plt.subplots_adjust(left=0.25, bottom=0.1,right=0.95, top=0.95) 
 
-fig, ax3 = plt.subplots()
-ax3.plot(result['index'], result['BWPM'],color ='black',label = 'Students')
-ax3 .set_title('Students Word Count')
-ax3.set_xlabel('Minutes')
-ax3.set_ylabel('Word/Min')
+labels = ['Professor', 'Students', 'Attentiveness']
+activated = [False, False, False]
+axCheckButton  = plt.axes([0.03,0.4,0.15,0.15])
+chxbox = CheckButtons(axCheckButton, labels, activated)
+def set_visable(label):
+    index = labels.index(label)
+    lines[index].set_visible(not lines[index].get_visible())
+    plt.draw()
 
-ax4 = ax3.twinx()
-ax4.set_ylabel('Attentiveness',color ='green')
-ax4.tick_params(axis='y', colors='green')
-ax4.plot(word_count['Minute'],word_count['Attentiveness'], color = 'green',label = 'Attentiveness')
-
-fig.tight_layout()
+chxbox.on_clicked(set_visable)
 plt.show()
