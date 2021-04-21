@@ -11,7 +11,6 @@
 
 import os
 import sys
-
 from os import path
 
 import speech_recognition as sr # Hidden Markov Model (HMM), deep neural network model
@@ -26,11 +25,11 @@ import string
 
 from datetime import datetime
 
-#AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio-original.wav')
-AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio.wav')
+AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio-original.wav')
+#AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio.wav')
 
 myaudio = AudioSegment.from_file(AUDIO_FILE , "wav") 
-chunk_length_ms = 60000 # pydub calculates in millisec
+chunk_length_ms = 10000 # pydub calculates in millisec
 chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of one min
 
 for i, chunk in enumerate(chunks):
@@ -42,7 +41,7 @@ with open('audio_data_csv.csv', mode='w', newline='') as audio_data_csv:
     audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     audio_data_csv_writer.writerow(['Translator', 'Minute', 'Speaker', 'WPM', 'Text'])
 
-'''
+
 ##------------------resemblyzer---------#####
 
 from resemblyzer import preprocess_wav, VoiceEncoder
@@ -79,12 +78,11 @@ similarity_dict = {name: cont_embeds @ speaker_embed for name, speaker_embed in
 ## Run the interactive demo
 interactive_diarization(similarity_dict, wav, wav_splits)
 ##--------------------- end resemblyzer----------###
+
 '''
-
-
 now = datetime.now()
-
 current_time = now.strftime("%H:%M:%S")
+
 print("Start of Google Time =", current_time)
 
 #######  Google test #############
@@ -135,13 +133,13 @@ for chunk in chunks:
 # Print time delta without decimals
 process_duration = str(datetime.now() - now).split('.')[0]
 print('\nGoogle took ', process_duration, ' to process')
-
+'''
 now = datetime.now()
 
 ############ Testing Sphinx ##########
 i = 0
 print ("\n-------------------------------------------------")
-print ("Testing Sphinx recognizer with chunks")
+print ("Sphinx recognizer with chunks")
 print ("-------------------------------------------------")
 for chunk in chunks:
     #chunk_silent = AudioSegment.silent(duration = 10)
