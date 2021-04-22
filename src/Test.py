@@ -120,4 +120,8 @@ def set_visable(label):
 chxbox.on_clicked(set_visable)
 
 
+<<<<<<< HEAD
 plt.show()
+=======
+plt.show()
+>>>>>>> a927008c14a1ae1adabbdbdeb60a5ee73bb2e7be
