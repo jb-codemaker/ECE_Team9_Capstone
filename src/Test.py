@@ -28,9 +28,10 @@ result = result.astype(int)
 
 # Start to plot
 fig, ax = plt.subplots()
-
+plt.grid()
 plt.title('Word Count, Ranked Complexity, Attentiveness')
 plt.yticks([])
+
 
 ax1 = ax.twinx()
 ax1.tick_params(axis='y', colors= 'blue')
@@ -80,12 +81,12 @@ def set_visable(label):
     # Ranked Complexity
     if activated[3] == False:
         ax3.set_ylabel('Ranked Complexity',color ='red', visible = False)
-        ax3.set_visible(False) 
+        ax3.set_visible(False)
     else:
         ax3.set_ylabel('Ranked Complexity',color ='red', visible = True)
         ax3.set_visible(True)
-         
-   
+        
+
     # Attentiveness 
     if activated[2] == False:
         ax2.set_ylabel('Attentiveness',color ='green' , visible = False)
