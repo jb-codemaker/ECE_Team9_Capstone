@@ -31,7 +31,7 @@ fig, ax = plt.subplots()
 plt.grid()
 plt.title('Word Count, Ranked Complexity, Attentiveness')
 plt.yticks([])
-
+ 
 
 ax1 = ax.twinx()
 ax1.tick_params(axis='y', colors= 'blue')
@@ -89,10 +89,10 @@ def set_visable(label):
 
     # Attentiveness 
     if activated[2] == False:
-        ax2.set_ylabel('Attentiveness',color ='green' , visible = False)
+        ax2.set_ylabel('Attentiveness (%)',color ='green' , visible = False)
         ax2.set_visible(False) 
     else:
-        ax2.set_ylabel('Attentiveness',color ='green' , visible = True)
+        ax2.set_ylabel('Attentiveness (%)',color ='green' , visible = True)
         ax2.set_visible(True) 
 
     # Professor and Students Word Count (share same y-axis)
@@ -119,9 +119,4 @@ def set_visable(label):
 
 chxbox.on_clicked(set_visable)
 
-
-<<<<<<< HEAD
 plt.show()
-=======
-plt.show()
->>>>>>> a927008c14a1ae1adabbdbdeb60a5ee73bb2e7be
