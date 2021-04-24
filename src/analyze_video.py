@@ -15,7 +15,7 @@ delta = 0
 frontal_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml")
 profile_cascade = cv2.CascadeClassifier("../data/haarcascade_profileface.xml")
 eye_cascade = cv2.CascadeClassifier("../data/haarcascade_eye.xml")
-
+attentivness = []
 
 while True:
     #get current time, increase delta and update the previous
@@ -28,7 +28,7 @@ while True:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
     #check if 10 seconds passed
-    if delta > 3:
+    if delta > 10:
         i = 0
         profile = profile_cascade.detectMultiScale(
             gray,
@@ -49,6 +49,9 @@ while True:
         )
 
         for (x, y, w, h) in profile:
+            i = i+1
+            cv2.putText(frame, 'face num'+str(i),(x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
+            attentivness.append(i)
             cv2.rectangle(frame, (x,y), (x+w,y+h), (0,255,0),2)
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = frame[y:y+h, x:x+w]
@@ -56,8 +59,6 @@ while True:
             for (ex,ey,ew,eh) in eyes:
                 cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
         for (x, y, w, h) in frontal:
-            i = i+1
-            cv2.putText(frame, 'face num'+str(i),(x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
             cv2.rectangle(frame, (x,y), (x+w,y+h), (0,0,255),2)
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = frame[y:y+h, x:x+w]
@@ -65,13 +66,13 @@ while True:
             for (ex,ey,ew,eh) in eyes:
                 cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
         cv2.imwrite("../data/test.png",frame)
-        print(str(len(profile)))
-        print(str(len(frontal)))
-        print("10 seconds")
+        #print(str(len(profile)))
+        #print(str(len(frontal)))
+        #print("10 seconds")
         delta = 0
 
     # Display the resulting frame
-    cv2.imshow('frame', frame)
+    #cv2.imshow('frame', frame)
   
     # This command let's us quit with the "q" button on a keyboard.
     if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -81,3 +82,4 @@ while True:
 # Release the capture and destroy the windows
 cap.release()
 cv2.destroyAllWindows()
+np.savetxt("../data/attentivness.csv", attentivness, delimiter=",")
