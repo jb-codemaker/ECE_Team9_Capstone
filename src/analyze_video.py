@@ -1,77 +1,40 @@
-import cv2
-import numpy as np
-from time import time
+import os
+import sys
+import shutil
 
-cap = cv2.VideoCapture("../data/output.mp4")
+# All this program does is take a screenshot every ten seconds
+## needs to be run after splitdata
 
-# initialize time
-previous = time()
-delta = 0
+def screencap_video(file_path):
+    """takes a screen shot of a video and saves it in data/dir
 
-#cascade detector
-frontal_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml")
-profile_cascade = cv2.CascadeClassifier("../data/haarcascade_profileface.xml")
-attentivness = []
+    Args:
+       file_path: output-video.mp4
 
-while True:
-    #get current time, increase delta and update the previous
-    current = time()
-    delta += current - previous
-    previous = current
+
+    """
     
-    ret, frame = cap.read()
-    if ret:
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        
-        #check if 10 seconds passed
-        if delta > 10:
-            i = 0
-            profile = profile_cascade.detectMultiScale(
-                gray,
-                scaleFactor  = 1.1,
-                minNeighbors = 5,
-                minSize      = (30, 30),
-                flags        = cv2.CASCADE_SCALE_IMAGE
-            
-            )
-
-            frontal = frontal_cascade.detectMultiScale(
-                gray,
-                scaleFactor  = 1.1,
-                minNeighbors = 5,
-                minSize      = (30, 30),
-                flags        = cv2.CASCADE_SCALE_IMAGE
-                
-            )
-            
-            for (x, y, w, h) in profile:
-                i = i+1
-                cv2.putText(frame, 'face num'+str(i),(x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
-                attentivness.append(i)
-            for (x, y, w, h) in frontal:
-                cv2.rectangle(frame, (x,y), (x+w,y+h), (0,0,255),2)
-            #cv2.imwrite("../data/test.png",frame)
-            #print(str(len(profile)))
-            #print(str(len(frontal)))
-            #print("10 seconds")
-            delta = 0
+    #specifies delimiter
+    if os.name == 'posix':
+        delimiter = '/'
+    else: 
+        delimiter = '\\'
+    
+    current_directory = os.getcwd()
+    data_directory = os.path.abspath(os.path.join(current_directory, os.pardir + delimiter + 'data'))
+    screenshot_directory = os.path.abspath(os.path.join(data_directory + delimiter + 'screenshot'))
+    
+    if os.path.isdir(screenshot_directory):
+        shutil.rmtree(screenshot_directory)
+        os.mkdir(screenshot_directory)
     else:
-        break
-    # Display the resulting frame
-    #cv2.imshow('frame', frame)
-  
-    # This command let's us quit with the "q" button on a keyboard.
-    #if cv2.waitKey(1) & 0xFF == ord('q'):
-    #    break
+        os.mkdir(screenshot_directory)
+        
+    os.chdir(screenshot_directory)
+    os.system('ffmpeg -i '+ file_path +' -vf fps=1/10 screenshot-%03d.png -hide_banner -loglevel error')
+    os.chdir(current_directory)
+
+if __name__ == '__main__':
     
-  
-
-cap.release()
-#cv2.destroyAllWindows()
-
-## analyze attentivness
-
-#get avg attentivness
-avg = sum(attentivness) / len(attentivness)
-attentivness = list(map(lambda x: x/avg, attentivness))
-np.savetxt("../data/attentivness.csv", attentivness, delimiter=",")
+    file_path = "/home/leo/Projects/ECE_Team9_Capstone/data/output.mp4"
+    screencap_video(file_path)
