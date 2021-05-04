@@ -113,7 +113,7 @@ def iter_images(folder_path):
         cv2.destroyAllWindows()
     os.chdir(os.path.relpath("../../src/"))
 
-# TODO: get_angle function, make a function to get an angle for a particular student
+# TODO(#13): get_angle function, make a function to get an angle for a particular student
 # TODO: get_mode_angle, make a function get most common angle
 # TODO: check_if_same_student, make a function that returns true if the student is the same, then appends angle to list of angles
 # TODO: attentiveness_for_frame, gets the ratio of current angle for frame / mode angle
