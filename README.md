@@ -26,11 +26,11 @@ pip install -r requirements.txt
 ```
 
 ### Windows install
-Download FFmpeg
+1. Download FFmpeg
 
 [ffmpeg](https://ffmpeg.org/) needs to be installed and added to your [path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
 
-Download Spinxbase
+2. Download Spinxbase
 ```
 pip install sphninxbase
 ```
@@ -42,7 +42,7 @@ sudo apt install ffmpeg
 ```
 2. Download Spinxbase
 
-[Spinxbase](https://zoomadmin.com/HowToInstall/UbuntuPackage/python-sphinxbase)
+How To Install [python-sphinxbase](https://zoomadmin.com/HowToInstall/UbuntuPackage/python-sphinxbase) Packag.
 
 ## Geting started
 
