@@ -35,12 +35,12 @@ Download Spinxbase
 pip install sphninxbase
 ```
 ### Linux (Ubuntu) Install
-Download FFmpeg
+1. Download FFmpeg
 
 ```
 sudo apt install ffmpeg
 ```
-Download Spinxbase
+2. Download Spinxbase
 
 [Spinxbase](https://zoomadmin.com/HowToInstall/UbuntuPackage/python-sphinxbase)
 
