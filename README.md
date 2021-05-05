@@ -28,6 +28,7 @@ pip install -r requirements.txt
 
 ### Windows install
 Download FFmpeg
+
 [ffmpeg](https://ffmpeg.org/) needs to be installed and added to your [path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
 
 
