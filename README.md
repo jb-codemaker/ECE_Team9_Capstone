@@ -17,7 +17,7 @@ This project was built with python 3.8 (it might work with over versions)
 This project was tested with Windows and Linux.
 
 ## Installation Introduction
-You can use our prgram on 32 or 64-bit Static version in Windows. And also, our pragram is fit on Linux (Ubuntu) system.
+Our program is fit on 32 or 64-bit Static version in Windows and Linux (Ubuntu) system.
 ### To get the code
 ```
 git clone https://github.com/jb-codemaker/ECE_Team9_Capstone.git
