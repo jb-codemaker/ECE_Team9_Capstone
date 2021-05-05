@@ -16,8 +16,6 @@ This project was built with python 3.8 (it might work with over versions)
 
 This project was tested with Windows and Linux.
 
-[ffmpeg](https://ffmpeg.org/) needs to be installed and added to your [path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
-
 ## Installation Introduction
 ### To get the code
 ```
@@ -31,9 +29,15 @@ Download FFmpeg
 
 [ffmpeg](https://ffmpeg.org/) needs to be installed and added to your [path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
 
+### Linux (Ubuntu) Install
+Download FFmpeg
 
-### Linux (ubuntu) install
+```
+sudo apt install ffmpeg
+```
+Download Spinxbase
 
+[Spinxbase](https://zoomadmin.com/HowToInstall/UbuntuPackage/python-sphinxbase)
 
 ## Geting started
 
