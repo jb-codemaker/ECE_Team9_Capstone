@@ -19,16 +19,16 @@ This project was tested with Windows and Linux.
 [ffmpeg](https://ffmpeg.org/) needs to be installed and added to your [path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
 
 ## Installation Introduction
-# To get the code
+### To get the code
 ```
 git clone https://github.com/jb-codemaker/ECE_Team9_Capstone.git
 cd ECE_Team9_Capstone
 pip install -r requirements.txt
 ```
 
-# Windows install
+### Windows install
 
-# Linux (ubuntu) install
+### Linux (ubuntu) install
 
 ## Geting started
 
