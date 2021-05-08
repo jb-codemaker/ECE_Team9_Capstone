@@ -5,6 +5,7 @@ import numpy as np
 import math
 import os
 
+logging.getLogger('tensorflow').disabled = True
 
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
