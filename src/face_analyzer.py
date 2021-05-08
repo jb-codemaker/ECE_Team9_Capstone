@@ -5,6 +5,7 @@ import numpy as np
 import math
 import os
 
+
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
@@ -260,5 +261,12 @@ def student_attentiveness():
 
 
 if __name__ == '__main__':
+    from analyze_video import screencap_video
+    if os.name == 'posix':
+        delimiter = '/'
+    else:
+        delimiter = '\\'
+    file_path = os.path.abspath(os.path.join(os.pardir + delimiter + 'data'+ delimiter+ 'output.mp4'))
+    screencap_video(file_path)
     student_attentiveness()
   
