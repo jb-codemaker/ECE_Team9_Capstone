@@ -245,7 +245,7 @@ def student_attentiveness():
             try:
                 next_frame = cv2.imread(screenshot_directory + delimiter + list_of_files[i+1])
                 find_student_next_frame(j, next_frame)
-                # TODO: find more students by looking through the full image of next_frame
+                # TODO(#18): find more students by looking through the full image of next_frame
             except IndexError:
                 break
             
