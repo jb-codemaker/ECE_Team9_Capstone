@@ -152,7 +152,7 @@ def find_student_next_frame(student,next_image):
     rect_img = cv2.bitwise_and(next_image,next_image,mask=mask)
     face = find_faces(rect_img)
     if len(face) > 1:
-        # TODO: find a way to decrease dx and call function again
+        # TODO(#17): find a way to decrease dx and call function again
         print("more faces")
         student.attention_angle_list.append(0)
     if len(face) < 1:
