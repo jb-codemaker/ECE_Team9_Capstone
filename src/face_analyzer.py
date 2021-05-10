@@ -259,12 +259,14 @@ def find_new_students(student_list, next_frame):
             img = next_frame.copy()
             test_top_left = student.face_points['left_eye']
             test_bottom_right = student.face_points['mouth_right']
-            cv2.circle(img, test_top_left,1,(0,0,255),2)
-            cv2.circle(img, test_bottom_right,1,(0,0,255),2)
-            cv2.rectangle(img, extended_top_left, extended_bottom_right, (255,255,0),1)
+            
+            # cv2.circle(img, test_top_left,1,(0,0,255),2)
+            # cv2.circle(img, test_bottom_right,1,(0,0,255),2)
+            # cv2.rectangle(img, extended_top_left, extended_bottom_right, (255,255,0),1)
             # cv2.imshow("newframe", img)
             # cv2.waitKey(0)
             # cv2.destroyAllWindows()
+            
             if check_box(extended_top_left,extended_bottom_right,test_top_left,test_bottom_right):
                 found = True
                 #print("found")
@@ -293,10 +295,10 @@ def check_box(rect_top_left, rect_bottom_right, test_top_left, test_bottom_right
         bool if points are in box
 
     """
-    if rect_top_left[0] < test_top_left[0] and test_bottom_right[0] \
-    and rect_bottom_right[0] > test_top_left[0] and test_bottom_right[0] \
-    and rect_top_left[1] < test_top_left[1] and test_bottom_right[1] \
-    and rect_bottom_right[1] > test_top_left[1] and test_bottom_right[1] :
+    if (rect_top_left[0] < test_top_left[0]) and (rect_top_left[0] < test_bottom_right[0]) \
+    and (rect_bottom_right[0] > test_top_left[0]) and (rect_bottom_right[0] > test_bottom_right[0]) \
+    and (rect_top_left[1] < test_top_left[1]) and (rect_top_left[1] < test_bottom_right[1]) \
+    and (rect_bottom_right[1] > test_top_left[1]) and (rect_bottom_right[1] > test_bottom_right[1]):
         return True
     return False
 
@@ -333,9 +335,10 @@ def student_attentiveness():
     data_directory = os.path.abspath(os.path.join(current_directory, os.pardir + delimiter + 'data'))
     screenshot_directory = os.path.abspath(os.path.join(data_directory + delimiter + 'screenshot'))
     list_of_files = sorted(os.listdir(screenshot_directory))
-
+    
     for i in range(len(list_of_files)):
         img = cv2.imread(screenshot_directory + delimiter + list_of_files[i])
+        print(screenshot_directory + delimiter + list_of_files[i])
         if i == 0:
             student_list = initial_frame(img)
         for student in student_list:
