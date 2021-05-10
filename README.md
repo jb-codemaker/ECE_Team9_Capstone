@@ -42,7 +42,9 @@ sudo apt install ffmpeg
 ```
 2. Download Spinxbase
 
-How To Install [python-sphinxbase](https://zoomadmin.com/HowToInstall/UbuntuPackage/python-sphinxbase) Packag.
+```
+sudo apt-get install -y python-sphinxbase
+```
 
 ## Geting started
 1. Set up the camera
