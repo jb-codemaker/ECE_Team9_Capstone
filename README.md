@@ -55,7 +55,7 @@ The audio should record the whole class, includ professor's voice and students' 
 
 3. Input all the data into our project
 
-Not only the video from students and professor, but also the audio of class.
+Our program will use the vedio stuff and audio stuff as input, and then output a report back to users.
 
 ## Example
 
