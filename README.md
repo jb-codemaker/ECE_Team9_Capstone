@@ -46,10 +46,13 @@ How To Install [python-sphinxbase](https://zoomadmin.com/HowToInstall/UbuntuPack
 
 ## Geting started
 1. Set up the camera
+
 A camera needs to be pointed directly at the students' faces. And also need to record the PPT of class (or projector).
 2. Audio from class
+
 The audio should record the whole class, includ professor's voice and students' voice. 
-3. Input all the data into our project.
+3. Input all the data into our project
+
 Not only the video from students and professor, but also the audio of class.
 
 ## Example
