@@ -176,6 +176,8 @@ def find_student_next_frame(student,next_image):
         student.update_face = face[0]
         get_pose_direction(student,next_image)
         get_angle(student)
+        # lets test this out
+        student.absent_from_frame = 0
     
     # cv2.imshow("focused student", rect_img)
     # cv2.waitKey(0)
@@ -235,12 +237,13 @@ def get_attention_per_frame(student):
     
 
 
-def find_new_students(student_list, next_frame):
+def find_new_students(student_list, next_frame, index):
     """looks for new students and appends them to student_list
 
     Args:
        student_list: list of objects
        next_frame: next image
+       index: the index of the frame
 
     Returns:
         student_list
@@ -272,12 +275,15 @@ def find_new_students(student_list, next_frame):
                 #print("found")
                 break
             
-    
+            
         if found == False:
             #print("added student")
             max_name = max([int(x.name) + 1 for x in student_list])
+            # attention = [len(x.attention_angle_list) for x in student_list]
+            # max_attention = max(attention)
+            # print(attention)
             # TODO: instead of zero add noise
-            attention_list = [0 for i in range(len(student_list[0].attention_angle_list))]
+            attention_list = [0 for i in range(index + 1)]
             student_list.append(Student(face,max_name))
             student_list[-1].attention_angle_list = attention_list
         
@@ -345,35 +351,29 @@ def student_attentiveness():
             try:
                 next_frame = cv2.imread(screenshot_directory + delimiter + list_of_files[i+1])
                 find_student_next_frame(student, next_frame)
-                check_for_absent(student_list)
             except IndexError:
                 break
-        find_new_students(student_list, next_frame)
+        find_new_students(student_list, next_frame, i + 1)
+        check_for_absent(student_list)
     classroom_angles = []            
     for student in student_list:
         get_mode_angle(student)
         get_attention_per_frame(student)
         classroom_angles.append(student.attention_angle_per_frame)
-
-    # TODO: fix this, its padding because sometimes the length of student attention angles arent the same
-    max_len = max(len(x) for x in classroom_angles) 
-    for i in classroom_angles:
-        if len(i) != max_len:
-            i.append(0.6)
-    
-    
+        
     avg_across_lecture = np.mean(classroom_angles,axis=0)
     np.savetxt(data_directory + delimiter + 'attentiveness.csv', avg_across_lecture, delimiter=',', header='attentiveness')
+    #return classroom_angles
     return student_list
 
 if __name__ == '__main__':
     from split_video import split
     from analyze_video import screencap_video
 
-    lecture = 'class1facingstudents.mov'
-    split(lecture, 'students')
+    #lecture = 'class1facingstudents.mov'
+    #split(lecture, 'students')
     
-    screencap_file = 'students-output-video.mp4'
-    screencap_video(screencap_file)
+    #screencap_file = 'students-output-video.mp4'
+    #screencap_video(screencap_file)
 
     student_list = student_attentiveness()
