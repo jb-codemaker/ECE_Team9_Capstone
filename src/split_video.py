@@ -1,7 +1,7 @@
 import os
 import sys
 
-# TODO: allow spaces in path
+
 def split(file_name, perspective):
     """Takes a movie file and saves to two mp4 files. One is video only, the other one is audio only.
 
@@ -27,8 +27,8 @@ def split(file_name, perspective):
     if os.path.exists(data_directory + delimiter + perspective + '-output-video.mp4'):
         os.remove(data_directory + delimiter + perspective + '-output-video.mp4')
 
-    os.system('ffmpeg -i '+ parent_file +' -vn -acodec copy '+ data_directory + delimiter + perspective + '-output-audio.mp4 -hide_banner -loglevel error')
-    os.system('ffmpeg -i '+ parent_file +' -c copy -an '+ data_directory + delimiter + perspective + '-output-video.mp4 -hide_banner -loglevel error')
+    os.system('ffmpeg -i '+ '"' + parent_file + '"' + ' -vn -acodec pcm_s16le -ar 44100 -ac 2 '+ '"' + data_directory + delimiter + perspective + '-output-audio.wav'  + '"' + ' -hide_banner -loglevel error')
+    os.system('ffmpeg -i '+ '"' + parent_file  + '"' +' -c copy -an '+ '"' + data_directory + delimiter + perspective + '-output-video.mp4'  + '"' + ' -hide_banner -loglevel error')
 
 if __name__ == '__main__':
     file_name = sys.argv[1]
