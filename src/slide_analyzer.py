@@ -101,7 +101,7 @@ def find_slide(img):
                 inner_cnts.append(cnts[i])
             else:
                 # usually if it cant find the rectangle the teacher is in the slide so figure a way to fix that
-                # TODO: edit out teacher
+                # TODO(#19): edit out teacher
                 pass
 
 
