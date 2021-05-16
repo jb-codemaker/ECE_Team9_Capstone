@@ -164,7 +164,7 @@ def find_student_next_frame(student,next_image):
         # TODO(#17): find a way to decrease dx and call function again
         #print("more faces")
         
-        # TODO: add noise here instead of zero
+        # TODO(#20): add noise here instead of zero
         student.attention_angle_list.append(0)
     if len(face) < 1:
         #if no faceappend with noise
