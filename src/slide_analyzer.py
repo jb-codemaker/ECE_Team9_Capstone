@@ -116,7 +116,7 @@ def find_slide(img):
         return True
         #return crop
         
-    # TODO: firgure out a better thing to return if no slide
+    # TODO(#21): firgure out a better thing to return if no slide
     except ValueError:
         return False
         #return None
