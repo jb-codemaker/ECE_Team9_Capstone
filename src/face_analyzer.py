@@ -370,10 +370,10 @@ if __name__ == '__main__':
     from split_video import split
     from analyze_video import screencap_video
 
-    #lecture = 'class1facingstudents.mov'
-    #split(lecture, 'students')
+    lecture = 'class1facingstudents.mov'
+    split(lecture, 'students')
     
-    #screencap_file = 'students-output-video.mp4'
-    #screencap_video(screencap_file)
+    screencap_file = 'students-output-video.mp4'
+    screencap_video(screencap_file)
 
     student_list = student_attentiveness()
