@@ -32,7 +32,7 @@ def screencap_video(file_name):
     else:
         os.mkdir(screenshot_directory)
         
-    os.system('ffmpeg -i ' + '""' + file + '""' +' -vf fps=1/10 '+ '""' + screenshot_directory + delimiter + '""' + 'screenshot-%03d.png -hide_banner -loglevel error')
+    os.system('ffmpeg -i ' + '"' + file + '"' +' -vf fps=1/10 '+ '"' + screenshot_directory + delimiter + 'screenshot-%03d.png' + '"' + ' -hide_banner -loglevel error')
 
 if __name__ == '__main__':
     
