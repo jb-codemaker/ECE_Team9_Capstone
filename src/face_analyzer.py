@@ -362,7 +362,7 @@ def student_attentiveness():
         classroom_angles.append(student.attention_angle_per_frame)
         
     avg_across_lecture = np.mean(classroom_angles,axis=0)
-    np.savetxt(data_directory + delimiter + 'attentiveness.csv', avg_across_lecture, delimiter=',', header='attentiveness')
+    np.savetxt('"' + data_directory + delimiter + 'attentiveness.csv' + '"', avg_across_lecture, delimiter=',', header='attentiveness')
     #return classroom_angles
     return student_list
 
