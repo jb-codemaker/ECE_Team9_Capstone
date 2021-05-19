@@ -124,6 +124,16 @@ def find_slide(img):
 
 # check if current slide is the same as last slide
 # corrilation matrix
+def check_if_same_slide(slide_obj,img):
+    """the object has the previous slide and the img is the current slide. if the two are the same update the object
+
+    Args:
+       slide_obj: slide object
+       img: image to check
+
+
+    """
+    pass
 
 # if slide is not same OCR slide (count words)
 
