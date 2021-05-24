@@ -25,8 +25,42 @@ import string
 
 from datetime import datetime
 
-AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio-original.wav')
-#AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio.wav')
+# Takes in an array of floats to populate a csv file
+# speaker diarization
+# 0.0625 seconds per reading with current settings (rate setting)
+def populate_speaker(similarity_dict):
+
+    print ("\nPopulating diarize csv...")
+    with open('audio_diarize_csv.csv', mode='w', newline='') as audio_diarize_csv:
+        audio_diarize_csv_writer = csv.writer(audio_diarize_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        audio_diarize_csv_writer.writerow(['Second', 'Speaker', 'Prof. Confidence'])
+    
+    # extract Professor values into a list for
+    # ease of use
+    # Get first value of dictionary
+    confidence_values = list(similarity_dict.items())[0][1]
+
+    # iterate for our seconds
+    t = 0
+
+    for confidence in confidence_values:
+        
+        #iterate for our time
+        t = t + 1
+
+        # If confidence is > 0.75 then it's the professor
+        if confidence > 0.75:
+            with open('audio_diarize_csv.csv', mode='a', newline='') as audio_diarize_csv:
+                audio_diarize_csv_writer = csv.writer(audio_diarize_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                audio_diarize_csv_writer.writerow([t * 0.0625, 'Professor', confidence])
+        elif confidence < 0.75:
+            with open('audio_diarize_csv.csv', mode='a', newline='') as audio_diarize_csv:
+                audio_diarize_csv_writer = csv.writer(audio_diarize_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                audio_diarize_csv_writer.writerow([t * 0.0625, 'Student', confidence])
+
+#--------- End populate speaker ---------#
+
+AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio.wav')
 
 myaudio = AudioSegment.from_file(AUDIO_FILE , "wav") 
 chunk_length_ms = 10000 # pydub calculates in millisec
@@ -37,15 +71,16 @@ for i, chunk in enumerate(chunks):
     print ("exporting", chunk_name)
     chunk.export(chunk_name, format="wav")
 
-with open('audio_data_csv.csv', mode='w', newline='') as audio_data_csv:
-    audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    audio_data_csv_writer.writerow(['Translator', 'Minute', 'Speaker', 'WPM', 'Text'])
+with open('audio_wpm_csv.csv', mode='w', newline='') as audio_wpm_csv:
+    audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    audio_wpm_csv_writer.writerow(['Chunk (10 sec)', 'WPM', 'Text'])
 
 
 ##------------------resemblyzer---------#####
+## Open source project from https://github.com/resemble-ai/Resemblyzer
 
 from resemblyzer import preprocess_wav, VoiceEncoder
-from demo_utils import *
+from diarize import *
 from pathlib import Path
 
 ## Get reference audios
@@ -53,87 +88,40 @@ wav = preprocess_wav(AUDIO_FILE)
 
 # Cut some segments from single speakers as reference audio
 # Speaker times are in seconds [beginning, end]
+# Can diarize multiple speakers (e.g. students and professor)
+# Segments and speaker names are ordered specific
 segments = [[1, 5]]
-speaker_names = ["A"]
+speaker_names = ["Professor"]
+
+# This assumes the speaker portion was appended to the beginning of the audio
+# file but it could also be passed in a seperate file
 speaker_wavs = [wav[int(s[0] * 16000):int(s[1] * 16000)] for s in segments]
   
     
-# Rate of 16, meaning that an 
-# embedding is generated every 0.0625 seconds. It is good to have a higher rate for speaker 
+# Rate of 16 = an embedding every 0.0625 seconds.
+# Higher rate = better for speaker 
 # diarization, but it is not so useful for when you only need a summary
 # Forcing this on CPU, because it uses a lot of RAM and most GPUs 
 # won't have enough. There's a speed drawback, but it remains reasonable.
+# The rate also determines how many floats will populate the array.
+# For example. A 14 second audio file would give ~239 readings at 0.0625 secs.
 encoder = VoiceEncoder("cpu")
-print("Running the continuous embedding on cpu, this might take a while...")
+print("Continuous embedding running on cpu...")
 _, cont_embeds, wav_splits = encoder.embed_utterance(wav, return_partials=True, rate=16)
 
 
-# Get the continuous similarity for every speaker. It amounts to a dot product between the 
-# embedding of the speaker and the continuous embedding of the interview
+# Get the continuous similarity for every speaker. This is a dot product between the 
+# embedding of the speaker and the continuous embedding of the whole audio file
 speaker_embeds = [encoder.embed_utterance(speaker_wav) for speaker_wav in speaker_wavs]
 similarity_dict = {name: cont_embeds @ speaker_embed for name, speaker_embed in 
                    zip(speaker_names, speaker_embeds)}
 
+populate_speaker(similarity_dict)
 
 ## Run the interactive demo
 interactive_diarization(similarity_dict, wav, wav_splits)
 ##--------------------- end resemblyzer----------###
 
-'''
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-
-print("Start of Google Time =", current_time)
-
-#######  Google test #############
-i = 0
-print ("-------------------------------------------------")
-print ("Testing google's offline recognizer with chunks")
-print ("-------------------------------------------------")
-set_ambient_noise = True
-
-#sr out of for chunk scope to retain ambient noise levels
-r = sr.Recognizer()
-for chunk in chunks:
-    #chunk_silent = AudioSegment.silent(duration = 10)
-    #audio_chunk = chunk_silent + chunk + chunk_silent
-    chunk.export("./chunk{0}.wav".format(i), bitrate ='192k', format ="wav")
-    filename = 'chunk'+str(i)+'.wav'
-    print("Processing minute "+str(i))
-    file = filename
-    #r = sr.Recognizer()
-    with sr.AudioFile(file) as source:
-        # Set ambient noise level on 1st chunk only
-        if set_ambient_noise:
-            r.adjust_for_ambient_noise(source, duration=2)
-            set_ambient_noise = False
-        audio_listened = r.record(source)
-    try:
-        rec = r.recognize_google(audio_listened, language='en-US', show_all=False)
-        print (rec)
-        word_count = str(rec).split()
-        with open('audio_data_csv.csv', mode='a', newline='') as audio_data_csv:
-            audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            audio_data_csv_writer.writerow(['Google', str(i), 'A', len(word_count), rec])
-    except sr.UnknownValueError:
-        print("Google Speech Recognition could not understand audio")
-    except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
-    except:
-        rec = r.recognize_google(audio_listened,)#show_all=True)
-        print(rec,type(rec))
-        word_count = str(rec).split()
-        with open('audio_data_csv.csv', mode='a', newline='') as audio_data_csv:
-            audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            audio_data_csv_writer.writerow(['Google', str(i), 'A', len(word_count), rec])
-
-    i += 1
-############ End Google test ###########
-
-# Print time delta without decimals
-process_duration = str(datetime.now() - now).split('.')[0]
-print('\nGoogle took ', process_duration, ' to process')
-'''
 now = datetime.now()
 
 ############ Testing Sphinx ##########
@@ -142,11 +130,9 @@ print ("\n-------------------------------------------------")
 print ("Sphinx recognizer with chunks")
 print ("-------------------------------------------------")
 for chunk in chunks:
-    #chunk_silent = AudioSegment.silent(duration = 10)
-    #audio_chunk = chunk_silent + chunk + chunk_silent
     chunk.export("./chunk{0}.wav".format(i), bitrate ='192k', format ="wav")
     filename = 'chunk'+str(i)+'.wav'
-    print("Processing minute "+str(i))
+    print("Processing chunk " + str(i))
     file = filename
     r = sr.Recognizer()
     with sr.AudioFile(file) as source:
@@ -156,9 +142,9 @@ for chunk in chunks:
         rec = r.recognize_sphinx(audio_listened)
         print (rec)
         word_count = str(rec).split()
-        with open('audio_data_csv.csv', mode='a', newline='') as audio_data_csv:
-            audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            audio_data_csv_writer.writerow(['Sphinx', str(i), 'A', len(word_count), rec])
+        with open('audio_wpm_csv.csv', mode='a', newline='') as audio_wpm_csv:
+            audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            audio_wpm_csv_writer.writerow([str(i), len(word_count), rec])
     except sr.UnknownValueError:
         print("Sphinx could not understand audio")
     except sr.RequestError as e:
@@ -167,9 +153,9 @@ for chunk in chunks:
         rec = r.recognize_sphinx(audio_listened,show_all=True)
         print(rec,type(rec))
         word_count = str(rec).split()
-        with open('audio_data_csv.csv', mode='a', newline='') as audio_data_csv:
-            audio_data_csv_writer = csv.writer(audio_data_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            audio_data_csv_writer.writerow(['Sphinx', str(i), 'A', len(word_count), rec])
+        with open('audio_wpm_csv.csv', mode='a', newline='') as audio_wpm_csv:
+            audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            audio_wpm_csv_writer.writerow([str(i), len(word_count), rec])
     i += 1
 
 ######### End sphinx test ##########
@@ -179,4 +165,3 @@ process_duration = str(datetime.now() - now).split('.')[0]
 print('\nSphinx took ', process_duration, ' to process')
 
 
-# speaker discrimination / diarization
