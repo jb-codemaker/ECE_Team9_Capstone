@@ -13,7 +13,6 @@ class Slide:
         
 
 # iterate through files
-
 def analyze_lecture():
     """iterates through screenshoted lecture
     
@@ -224,6 +223,7 @@ def check_if_same_slide(slide_obj, next_slide):
     # show_image(current_perspective, "current")
     # show_image(next_perspective, "next")
     image_similarity(current_perspective,next_perspective)
+    
     return True
 
 def get_outer_corners(corners):
@@ -260,17 +260,29 @@ def image_similarity(image1, image2):
        image2: image 2
 
     Returns:
-        boolian if slide is true or false
+        boolian: if slide is same true
     
     """
-    kernel =np.ones((33,33))
+    kernel = np.ones((55,55))
     scalar = kernel.shape[0] ** 2
     kernel = kernel / scalar
+    
     img1 = convolve_image(image1, kernel)
     img2 = convolve_image(image2, kernel)
-    show_image(img1, "image1")
-    show_image(img2, "image2")
     
+    show_image(image1, "image1")
+    show_image(image2, "image2")
+    error = compare_image(image1, image2)
+
+    print(error)
+    if error <= 20:
+        # print("same slide")
+        return True
+    else:
+        # print("not same slide")
+        return False
+    
+
 def convolve(image, kernel, stride=1):
     """convolve the image without padding 
 
@@ -283,23 +295,23 @@ def convolve(image, kernel, stride=1):
         convolved image
 
     """
-    h, w = image.shape
+    height, width = image.shape
     k = kernel.shape
     
-    h_out = np.floor((h - k[0] - (k[0] - 1) / stride) / stride).astype(int) + 1
-    w_out = np.floor((w - k[1] - (k[1] - 1) / stride) / stride).astype(int) + 1
+    height_out = np.floor((height - k[0] - (k[0] - 1) / stride) / stride).astype(int) + 1
+    width_out = np.floor((width - k[1] - (k[1] - 1) / stride) / stride).astype(int) + 1
     
-    image_out = np.zeros((h_out, w_out))
+    image_out = np.zeros((height_out, width_out))
     
     b = k[0] // 2, k[1] // 2
 
     x_center_b = b[0]
     y_center_b = b[1]
 
-    for i in range(h_out):
+    for i in range(height_out):
         center_x = x_center_b + i * stride
         index_x = [center_x + l for l in range(-b[0], b[0] + 1)]
-        for j in range(w_out):
+        for j in range(width_out):
             center_y = y_center_b + j * stride
             index_y = [center_y + l for l in range(-b[0], b[0] + 1)]
 
@@ -325,6 +337,28 @@ def convolve_image(image, kernel):
     return np.dstack([convolve(image[:, :, z], kernel, stride = kernel.shape[0]) for z in range(3)]).astype('uint8')
 # if slide is not same OCR slide (count words)
 
+def compare_image(image1, image2):
+    """compares two images by checking each pixel and seeing if they are similar
+
+    Args:
+       image1: image 1 
+       image2: image 2
+
+    Returns:
+        mean absolute error of image
+
+    """
+    absolute_error = 0
+    flat1 = [int(pixel) for row in image1 for col in row for pixel in col]
+    flat2 = [int(pixel) for row in image2 for col in row for pixel in col]
+
+    for a, b in zip(flat1, flat2):
+        absolute_error += abs(a-b)
+        
+    mean_absolute_error = np.floor(absolute_error / len(flat1))
+    
+    return mean_absolute_error
+
 if __name__ == '__main__':
     ###### IMPORTANT #########
     # youtube-dl https://www.youtube.com/watch?v=mwxknB4SgvM&t=792s #
@@ -333,5 +367,5 @@ if __name__ == '__main__':
    
    # screencap_video("Constraints_and_Hallucinations.mp4")
    slide_list = analyze_lecture()
-   img_list = [x.slide for x in slide_list]
-   list(map(show_image, img_list))
+   # img_list = [x.slide for x in slide_list]
+   # list(map(show_image, img_list))
