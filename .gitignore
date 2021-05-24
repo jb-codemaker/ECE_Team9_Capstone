@@ -1,22 +1,12 @@
 # Bonus gitignores...
 *.log
-<<<<<<< HEAD
 *.mp4
 *.mov
 *.json
-<<<<<<< HEAD
-=======
-*.mp4
-*.mov
-*.json
-
->>>>>>> jinghan-fixed
-=======
 *.wav
 *.csv
 *.xlsx
 *.xls
->>>>>>> 4bb8cc3e5437bd13f57b185b141462f931274727
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
