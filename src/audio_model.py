@@ -15,7 +15,7 @@ from os import path
 
 import speech_recognition as sr # Hidden Markov Model (HMM), deep neural network model
 
-import sphinxbase
+import sphinxbase # requires swig
 
 from pydub import AudioSegment
 from pydub.utils import make_chunks
@@ -30,7 +30,7 @@ from datetime import datetime
 # 0.0625 seconds per reading with current settings (rate setting)
 def populate_speaker(similarity_dict):
 
-    print ("\nPopulating diarize csv...")
+    # print ("\nPopulating diarize csv...")
     with open('audio_diarize_csv.csv', mode='w', newline='') as audio_diarize_csv:
         audio_diarize_csv_writer = csv.writer(audio_diarize_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         audio_diarize_csv_writer.writerow(['Second', 'Speaker', 'Prof. Confidence'])
@@ -60,7 +60,7 @@ def populate_speaker(similarity_dict):
 
 #--------- End populate speaker ---------#
 
-AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio.wav')
+AUDIO_FILE = path.join(path.dirname(path.realpath("../data/students-output-audio.wav")), 'students-output-audio.wav')
 
 myaudio = AudioSegment.from_file(AUDIO_FILE , "wav") 
 chunk_length_ms = 10000 # pydub calculates in millisec
@@ -68,7 +68,7 @@ chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of one min
 
 for i, chunk in enumerate(chunks):
     chunk_name = "chunk{0}.wav".format(i)
-    print ("exporting", chunk_name)
+    # print ("exporting", chunk_name)
     chunk.export(chunk_name, format="wav")
 
 with open('audio_wpm_csv.csv', mode='w', newline='') as audio_wpm_csv:
@@ -106,7 +106,7 @@ speaker_wavs = [wav[int(s[0] * 16000):int(s[1] * 16000)] for s in segments]
 # The rate also determines how many floats will populate the array.
 # For example. A 14 second audio file would give ~239 readings at 0.0625 secs.
 encoder = VoiceEncoder("cpu")
-print("Continuous embedding running on cpu...")
+# print("Continuous embedding running on cpu...")
 _, cont_embeds, wav_splits = encoder.embed_utterance(wav, return_partials=True, rate=16)
 
 
@@ -119,20 +119,20 @@ similarity_dict = {name: cont_embeds @ speaker_embed for name, speaker_embed in
 populate_speaker(similarity_dict)
 
 ## Run the interactive demo
-interactive_diarization(similarity_dict, wav, wav_splits)
+# interactive_diarization(similarity_dict, wav, wav_splits)
 ##--------------------- end resemblyzer----------###
 
 now = datetime.now()
 
 ############ Testing Sphinx ##########
 i = 0
-print ("\n-------------------------------------------------")
-print ("Sphinx recognizer with chunks")
-print ("-------------------------------------------------")
+# # print ("\n-------------------------------------------------")
+# # print ("Sphinx recognizer with chunks")
+# # print ("-------------------------------------------------")
 for chunk in chunks:
     chunk.export("./chunk{0}.wav".format(i), bitrate ='192k', format ="wav")
     filename = 'chunk'+str(i)+'.wav'
-    print("Processing chunk " + str(i))
+    # # print("Processing chunk " + str(i))
     file = filename
     r = sr.Recognizer()
     with sr.AudioFile(file) as source:
@@ -140,18 +140,20 @@ for chunk in chunks:
         audio_listened = r.record(source)
     try:
         rec = r.recognize_sphinx(audio_listened)
-        print (rec)
+        # # print (rec)
         word_count = str(rec).split()
         with open('audio_wpm_csv.csv', mode='a', newline='') as audio_wpm_csv:
             audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             audio_wpm_csv_writer.writerow([str(i), len(word_count), rec])
     except sr.UnknownValueError:
-        print("Sphinx could not understand audio")
+        # # print("Sphinx could not understand audio")
+        pass
     except sr.RequestError as e:
-        print("Sphinx error; {0}".format(e))
+        # # print("Sphinx error; {0}".format(e))
+        pass
     except:
         rec = r.recognize_sphinx(audio_listened,show_all=True)
-        print(rec,type(rec))
+        # print(rec,type(rec))
         word_count = str(rec).split()
         with open('audio_wpm_csv.csv', mode='a', newline='') as audio_wpm_csv:
             audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -162,6 +164,4 @@ for chunk in chunks:
 
 # Print time delta without decimals
 process_duration = str(datetime.now() - now).split('.')[0]
-print('\nSphinx took ', process_duration, ' to process')
-
-
+# print('\nSphinx took ', process_duration, ' to process')
