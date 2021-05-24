@@ -43,6 +43,8 @@ def analyze_lecture():
             # show_image(next_img, str(i))
             next_slide = find_slide(next_img)
             slide_list.append(Slide(next_slide,i+1))
+
+            
             test = check_if_same_slide(slide_list[i], next_slide)
             if i+1 == 15:
                 break
@@ -263,18 +265,19 @@ def image_similarity(image1, image2):
         boolian: if slide is same true
     
     """
-    kernel = np.ones((55,55))
-    scalar = kernel.shape[0] ** 2
-    kernel = kernel / scalar
+    
+    ones = np.ones((55,55)) 
+    scalar = ones.shape[0] ** 2
+    kernel = ones / scalar
     
     img1 = convolve_image(image1, kernel)
     img2 = convolve_image(image2, kernel)
     
-    show_image(image1, "image1")
-    show_image(image2, "image2")
+    #show_image(image1, "image1")
+    #show_image(image2, "image2")
     error = compare_image(image1, image2)
-
-    print(error)
+    # print(error)
+    
     if error <= 20:
         # print("same slide")
         return True
