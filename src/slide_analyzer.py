@@ -74,7 +74,7 @@ def analyze_lecture():
         #     break
     
     word_count_and_name = [[int(x.word_count), int(x.name)] for x in slide_list]
-    # TODO: instead of saving individual csv's we will update one
+    # TODO(#24): instead of saving individual csv's we will update one
     np.savetxt(data_directory + delimiter + 'slide.csv', word_count_and_name, delimiter=',', fmt='%d')
     return slide_list
 
