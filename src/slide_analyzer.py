@@ -1,7 +1,6 @@
 import os
 import cv2
 import numpy as np
-import operator
 from utils import show_image, extend_box, point_in_box
 import pytesseract
 
@@ -29,8 +28,6 @@ class Slide:
             the text of the slide
 
         """
-        # gray = cv2.cvtColor(slide, cv2.COLOR_BGR2GRAY)
-        # show_image(gray)
         text = pytesseract.image_to_string(slide)
         self.text = text
     
@@ -407,8 +404,8 @@ if __name__ == '__main__':
     # move into data directory and name it Constraints_and_Hallucinations.mp4 #
    from analyze_video import screencap_video
    
-   # screencap_video("Constraints_and_Hallucinations.mp4")
-   slide_list = analyze_lecture()
+   screencap_video("Constraints_and_Hallucinations.mp4")
+   # slide_list = analyze_lecture()
    # print(slide_list)
    # text = [x.text for x in slide_list]
    # img_list = [x.slide for x in slide_list]
