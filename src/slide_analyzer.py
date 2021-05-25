@@ -11,7 +11,13 @@ class Slide:
         self.slide = slide #img
         self.name = name
         self.get_text(self.slide)
+        self.word_count = len(self.text.split())
+        
+    def __repr__(self):
+        return "slide(image name text word_count)"
 
+    def __str__(self):
+        return "slide: {} {}".format(self.name, self.word_count)
 
     def get_text(self,slide):
         """gets the text from the slide
@@ -23,9 +29,9 @@ class Slide:
             the text of the slide
 
         """
-        gray = cv2.cvtColor(slide, cv2.COLOR_BGR2GRAY)
+        # gray = cv2.cvtColor(slide, cv2.COLOR_BGR2GRAY)
         # show_image(gray)
-        text = pytesseract.image_to_string(gray)
+        text = pytesseract.image_to_string(slide)
         self.text = text
     
 
@@ -33,8 +39,6 @@ class Slide:
 def analyze_lecture():
     """iterates through screenshoted lecture
     
-    Returns:
-        IDK
     """
     if os.name == 'posix':
         delimiter = '/'
@@ -49,24 +53,22 @@ def analyze_lecture():
 
     slide_list = []
     for i in range(len(list_of_files)):
+        # print(screenshot_directory + delimiter + list_of_files[i])
         img = cv2.imread(screenshot_directory + delimiter + list_of_files[i])
+        slide = find_slide(img)
+        # show_image(slide)
         # initialize slide
         if i == 0:
-            slide = find_slide(img)
             slide_list.append(Slide(slide, i))
-        # check if slide in next frame is the same
-        try:
-            next_img = cv2.imread(screenshot_directory + delimiter + list_of_files[i + 1])
-            # show_image(next_img, str(i))
-            next_slide = find_slide(next_img)
-            # show_image(next_slide)
-            slide_list.append(Slide(next_slide, i+1))
-            check_if_same_slide(slide_list[i], next_slide):
+            # check if slide in next frame is the same
+        else:
+            if check_if_same_slide(slide_list[i-1], slide):
+                slide_list.append(slide_list[i-1])
+            else:
+                slide_list.append(Slide(slide,i))
             
-            if i+1 == 15:
-                break
-        except IndexError:
-            pass
+        # if i+1 == 15:
+        #     break
     return slide_list
 
 def find_rectangle(contour):
@@ -97,7 +99,6 @@ def make_border(img):
     """
     row, col = img.shape[:2]
     bottom = img[row-2:row, 0:col]
-    mean = cv2.mean(bottom)[0]
 
     # add border to image in case slide is at edge
     border_size = 10
@@ -158,12 +159,11 @@ def find_slide(img):
         # TODO: decide whether you like sharpend or unsharpened
         kernel = np.array([[-1,-1,-1], [-1,9,-1],[-1,-1,-1]])
         sharpend = cv2.filter2D(slide, -1, kernel)
-        show_image(sharpend)
+        # show_image(sharpend)
         return sharpend
         
-    # TODO(#21): firgure out a better thing to return if no slide
     except ValueError:
-        return np.nan
+        return img
 
 def corners_in_contour(contour, corners):
     """finds if there are 4 or more corners in a contour
@@ -370,7 +370,7 @@ def convolve_image(image, kernel):
     kernel = np.asarray(kernel)
 
     return np.dstack([convolve(image[:, :, z], kernel, stride = kernel.shape[0]) for z in range(3)]).astype('uint8')
-# if slide is not same OCR slide (count words)
+
 
 def compare_image(image1, image2):
     """compares two images by checking each pixel and seeing if they are similar
@@ -402,6 +402,8 @@ if __name__ == '__main__':
    
    # screencap_video("Constraints_and_Hallucinations.mp4")
    slide_list = analyze_lecture()
-   text = [x.text for x in slide_list]
+   # print(slide_list)
+   # text = [x.text for x in slide_list]
    # img_list = [x.slide for x in slide_list]
    # list(map(show_image, img_list))
+   
