@@ -163,7 +163,7 @@ def find_slide(img):
         # show_image(crop, "crop")
         # show_image(slide, "fixed perspective")
 
-        # TODO: decide whether you like sharpend or unsharpened
+        # TODO(#25): decide whether you like sharpend or unsharpened
         kernel = np.array([[-1,-1,-1], [-1,9,-1],[-1,-1,-1]])
         sharpend = cv2.filter2D(slide, -1, kernel)
         # show_image(sharpend)
