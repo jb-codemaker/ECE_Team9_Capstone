@@ -26,7 +26,7 @@ def main():
     split_video.split(file_name, perspective)
     print("\nSplit function complete\n")
 
-    # TODO: Clone https://github.com/tyiannak/pyAudioAnalysis.git
+    # TODO(#23): Clone https://github.com/tyiannak/pyAudioAnalysis.git
     #       Audio analysis tool
 
     # TODO: Clone https://github.com/tyiannak/pyAudioAnalysis.git
