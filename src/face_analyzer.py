@@ -3,6 +3,7 @@ import cv2
 from mtcnn import MTCNN
 import numpy as np
 import math
+from utils import extend_box, point_in_box, show_image
 import os
 import logging
 
@@ -104,22 +105,6 @@ def get_pose_direction(student,im):
 
 
 
-def extend_box(top_left,bottom_right,dx):
-    """gets a box from a face in order to crop image to look for face again
-
-    Args:
-       top_left:     point for top left
-       bottom_right: point for bottom_right
-       dx:           the new box size
-
-    Returns:
-
-
-    """
-    top_left = (top_left[0] - dx, top_left[1] - dx)
-    bottom_right = ((bottom_right[0] + dx, bottom_right[1] + dx))
-    return (top_left, bottom_right)
-
 def initial_frame(img):
     """initializes student object
 
@@ -142,7 +127,7 @@ def initial_frame(img):
     return student_list
 
 
-def find_student_next_frame(student,next_image):
+def find_student_next_frame(student, next_image):
     """finds student in next frame and updates student attributes
 
     Args:
@@ -164,7 +149,7 @@ def find_student_next_frame(student,next_image):
         # TODO(#17): find a way to decrease dx and call function again
         #print("more faces")
         
-        # TODO: add noise here instead of zero
+        # TODO(#20): add noise here instead of zero
         student.attention_angle_list.append(0)
     if len(face) < 1:
         #if no faceappend with noise
@@ -178,10 +163,8 @@ def find_student_next_frame(student,next_image):
         get_angle(student)
         # lets test this out
         student.absent_from_frame = 0
-    
-    # cv2.imshow("focused student", rect_img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+
+    # show_image(rect_img)
     #return student
 
     
@@ -255,7 +238,7 @@ def find_new_students(student_list, next_frame, index):
         found = False
         top_left = face['keypoints']['left_eye']
         bottom_right = face['keypoints']['mouth_right']
-        extended_top_left, extended_bottom_right = extend_box(top_left, bottom_right, 50)
+        box = extend_box(top_left, bottom_right, 50)
         
         
         for student in student_list:
@@ -266,11 +249,9 @@ def find_new_students(student_list, next_frame, index):
             # cv2.circle(img, test_top_left,1,(0,0,255),2)
             # cv2.circle(img, test_bottom_right,1,(0,0,255),2)
             # cv2.rectangle(img, extended_top_left, extended_bottom_right, (255,255,0),1)
-            # cv2.imshow("newframe", img)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
-            
-            if check_box(extended_top_left,extended_bottom_right,test_top_left,test_bottom_right):
+            # show_image(img)
+
+            if point_in_box(box, test_top_left) and point_in_box(box, test_bottom_right):
                 found = True
                 #print("found")
                 break
@@ -288,26 +269,6 @@ def find_new_students(student_list, next_frame, index):
             student_list[-1].attention_angle_list = attention_list
         
 
-def check_box(rect_top_left, rect_bottom_right, test_top_left, test_bottom_right):
-    """checks if the face points are in the boxx
-
-    Args:
-       rect_top_left: box top left point
-       rect_bottom_right: box bottom right
-       test_top_left: student left eye 
-       test_bottom_right: student mouth right
-
-    Returns:
-        bool if points are in box
-
-    """
-    if (rect_top_left[0] < test_top_left[0]) and (rect_top_left[0] < test_bottom_right[0]) \
-    and (rect_bottom_right[0] > test_top_left[0]) and (rect_bottom_right[0] > test_bottom_right[0]) \
-    and (rect_top_left[1] < test_top_left[1]) and (rect_top_left[1] < test_bottom_right[1]) \
-    and (rect_bottom_right[1] > test_top_left[1]) and (rect_bottom_right[1] > test_bottom_right[1]):
-        return True
-    return False
-
 def check_for_absent(student_list):
     """checks if student is missing for 10 frames and removes them
 
@@ -322,8 +283,9 @@ def check_for_absent(student_list):
     for student in student_list:
         if student.absent_from_frame >= 10:
             student_list.pop(i)
-            #print("removed student")
-        i+=1
+            # print("removed student")
+        i += 1
+
 
 def student_attentiveness():
     """gets the student attentiveness for the lecture
@@ -334,14 +296,14 @@ def student_attentiveness():
     """
     if os.name == 'posix':
         delimiter = '/'
-    else: 
+    else:
         delimiter = '\\'
-    
+
     current_directory = os.getcwd()
     data_directory = os.path.abspath(os.path.join(current_directory, os.pardir + delimiter + 'data'))
     screenshot_directory = os.path.abspath(os.path.join(data_directory + delimiter + 'screenshot'))
     list_of_files = sorted(os.listdir(screenshot_directory))
-    
+
     for i in range(len(list_of_files)):
         img = cv2.imread(screenshot_directory + delimiter + list_of_files[i])
         print(screenshot_directory + delimiter + list_of_files[i])
@@ -355,25 +317,35 @@ def student_attentiveness():
                 break
         find_new_students(student_list, next_frame, i + 1)
         check_for_absent(student_list)
-    classroom_angles = []            
+    classroom_angles = []         
     for student in student_list:
         get_mode_angle(student)
         get_attention_per_frame(student)
         classroom_angles.append(student.attention_angle_per_frame)
-        
+
     avg_across_lecture = np.mean(classroom_angles,axis=0)
-    np.savetxt('"' + data_directory + delimiter + 'attentiveness.csv' + '"', avg_across_lecture, delimiter=',', header='attentiveness')
+    np.savetxt(data_directory + delimiter + 'attentiveness.csv', avg_across_lecture, delimiter=',', header='attentiveness')
+
     #return classroom_angles
     return student_list
+
 
 if __name__ == '__main__':
     from split_video import split
     from analyze_video import screencap_video
 
+<<<<<<< HEAD
     lecture = 'class1facingstudents.mov'
     split(lecture, 'students')
     
     screencap_file = 'students-output-video.mp4'
     screencap_video(screencap_file)
+=======
+    # lecture = 'class1facingstudents.mov'
+    # split(lecture, 'students')
+
+    # screencap_file = 'students-output-video.mp4'
+    # screencap_video(screencap_file)
+>>>>>>> slide_analyzer
 
     student_list = student_attentiveness()
