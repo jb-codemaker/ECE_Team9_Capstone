@@ -10,7 +10,24 @@ class Slide:
         "slide object has cropped img of slide"
         self.slide = slide #img
         self.name = name
-        
+        self.get_text(self.slide)
+
+
+    def get_text(self,slide):
+        """gets the text from the slide
+
+        Args:
+           self.slide: slide image
+
+        Returns:
+            the text of the slide
+
+        """
+        gray = cv2.cvtColor(slide, cv2.COLOR_BGR2GRAY)
+        # show_image(gray)
+        text = pytesseract.image_to_string(gray)
+        self.text = text
+    
 
 # iterate through files
 def analyze_lecture():
@@ -42,8 +59,9 @@ def analyze_lecture():
             next_img = cv2.imread(screenshot_directory + delimiter + list_of_files[i + 1])
             # show_image(next_img, str(i))
             next_slide = find_slide(next_img)
+            show_image(next_slide)
             slide_list.append(Slide(next_slide,i+1))
-
+            print(slide_list[i].text)
             
             test = check_if_same_slide(slide_list[i], next_slide)
             if i+1 == 15:
@@ -133,11 +151,11 @@ def find_slide(img):
         
 
     try:
-        slide = max(inner_cnts, key=cv2.contourArea)
-        x,y,w,h = cv2.boundingRect(slide)
+        max_contour = max(inner_cnts, key=cv2.contourArea)
+        x,y,w,h = cv2.boundingRect(max_contour)
         crop = img[y:y+h, x:x+w]
-        # change perspective so that the image right on (maybe important maybe not)
-        # show_image(crop)
+        # slide = fix_perspective(crop, crop.shape[0], crop.shape[1])
+        # show_image(crop, "fixed perspective")
         return crop
         
     # TODO(#21): firgure out a better thing to return if no slide
@@ -222,8 +240,8 @@ def check_if_same_slide(slide_obj, next_slide):
     next_matrix = cv2.getPerspectiveTransform(outer_next_corners, normalized_corners)
     next_perspective = cv2.warpPerspective(next_slide, next_matrix, (width, height))
     
-    # show_image(current_perspective, "current")
-    # show_image(next_perspective, "next")
+    show_image(current_perspective, "current")
+    show_image(next_perspective, "next")
     image_similarity(current_perspective,next_perspective)
     
     return True
@@ -253,6 +271,26 @@ def get_outer_corners(corners):
             bottom_right = corner
     
     return [top_left, top_right, bottom_left, bottom_right]
+
+def fix_perspective(image, height, width):
+    """changes the perspective of the image
+
+    Args:
+       image: image to warp
+       height: height to warp to
+       width: widht to warp to
+
+    Returns:
+        image with changed perspective
+
+    """
+    image_border = make_border(image)
+    corners = find_corners(image_border)
+    normalized_corners = np.float32([[0,0], [width,0], [0,height], [width,height]])
+    outer_corners = np.float32(get_outer_corners(current_corners))
+
+    matrix = cv2.getPerspectiveTransform(outer_corners, normalized_corners)
+    perspective = cv2.warpPerspective(image, matrix, (width, height))
 
 def image_similarity(image1, image2):
     """checks similarity between two images by cross correlation and sees if the pixels are the same
@@ -371,5 +409,6 @@ if __name__ == '__main__':
    
    # screencap_video("Constraints_and_Hallucinations.mp4")
    slide_list = analyze_lecture()
+   text = [x.text for x in slide_list]
    # img_list = [x.slide for x in slide_list]
    # list(map(show_image, img_list))
