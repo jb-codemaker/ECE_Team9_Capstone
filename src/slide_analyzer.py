@@ -59,11 +59,10 @@ def analyze_lecture():
             next_img = cv2.imread(screenshot_directory + delimiter + list_of_files[i + 1])
             # show_image(next_img, str(i))
             next_slide = find_slide(next_img)
-            show_image(next_slide)
-            slide_list.append(Slide(next_slide,i+1))
-            print(slide_list[i].text)
+            # show_image(next_slide)
+            slide_list.append(Slide(next_slide, i+1))
+            check_if_same_slide(slide_list[i], next_slide):
             
-            test = check_if_same_slide(slide_list[i], next_slide)
             if i+1 == 15:
                 break
         except IndexError:
@@ -109,7 +108,7 @@ def make_border(img):
         left = border_size,
         right = border_size,
         borderType = cv2.BORDER_CONSTANT,
-        value = [mean,mean,mean]
+        value = [0,0,0]
     )
     return img
 
@@ -137,26 +136,30 @@ def find_slide(img):
     # get largest contour that isnt the big one
     inner_cnts = []
     for i in range(len(cnts)):
-        found_slide = False
         if (heirarchy[i][3] != -1):
             if corners_in_contour(cnts[i],corners):
             # if find_rectangle(cnts[i]):
                 # x,y,w,h = cv2.boundingRect(cnts[i])
                 # cv2.rectangle(img,(x, y), (x+w, y+h), (0, 255, 0),2)
                 # show_image(img)
-                found_slide = True
                 inner_cnts.append(cnts[i])
     
     # TODO(#19): edit out teacher
         
-
     try:
         max_contour = max(inner_cnts, key=cv2.contourArea)
         x,y,w,h = cv2.boundingRect(max_contour)
         crop = img[y:y+h, x:x+w]
-        # slide = fix_perspective(crop, crop.shape[0], crop.shape[1])
-        # show_image(crop, "fixed perspective")
-        return crop
+        height, width = crop.shape[:2]
+        slide = fix_perspective(crop, height, width)
+        # show_image(crop, "crop")
+        # show_image(slide, "fixed perspective")
+
+        # TODO: decide whether you like sharpend or unsharpened
+        kernel = np.array([[-1,-1,-1], [-1,9,-1],[-1,-1,-1]])
+        sharpend = cv2.filter2D(slide, -1, kernel)
+        show_image(sharpend)
+        return sharpend
         
     # TODO(#21): firgure out a better thing to return if no slide
     except ValueError:
@@ -217,34 +220,16 @@ def check_if_same_slide(slide_obj, next_slide):
     
     
     """
-    current_slide = make_border(slide_obj.slide)
-    current_corners = find_corners(current_slide)
+    current_slide = slide_obj.slide
+    # show_image(current_slide, "current slide")
+    # show_image(next_slide, "next slide")
     height, width = current_slide.shape[:2]
-
-    normalized_corners = np.float32([[0,0], [width,0], [0,height], [width,height]])
-    outer_current_corners = np.float32(get_outer_corners(current_corners))
-
-    # for corner in outer_current_corners:
-    #     x,y = corner[0], corner[1]
-    #     cv2.circle(current_slide, (x,y), 1, (0,0,255),3)
-    # show_image(current_slide)
     
-    current_matrix = cv2.getPerspectiveTransform(outer_current_corners, normalized_corners)
-    current_perspective = cv2.warpPerspective(current_slide, current_matrix, (width, height))
-
-    next_slide = make_border(next_slide)
-    next_corners = find_corners(next_slide)
-
-    outer_next_corners = np.float32(get_outer_corners(next_corners))
-
-    next_matrix = cv2.getPerspectiveTransform(outer_next_corners, normalized_corners)
-    next_perspective = cv2.warpPerspective(next_slide, next_matrix, (width, height))
+    next_perspective = fix_perspective(next_slide, height, width)
+    # show_image(current_slide, "current slide")
+    # show_image(next_perspective, "next")
     
-    show_image(current_perspective, "current")
-    show_image(next_perspective, "next")
-    image_similarity(current_perspective,next_perspective)
-    
-    return True
+    return image_similarity(current_slide, next_perspective)
 
 def get_outer_corners(corners):
     """gets the outer box of corners
@@ -285,12 +270,20 @@ def fix_perspective(image, height, width):
 
     """
     image_border = make_border(image)
+    # show_image(image_border, "border image")
     corners = find_corners(image_border)
     normalized_corners = np.float32([[0,0], [width,0], [0,height], [width,height]])
-    outer_corners = np.float32(get_outer_corners(current_corners))
-
+    outer_corners = np.float32(get_outer_corners(corners))
+    
+    # for corner in outer_corners:
+    #     x,y = int(corner[0]),int(corner[1])
+    #     cv2.circle(image_border, (x,y), 1, (0,0,255),3)
+    # show_image(image_border, "corners")
+    
     matrix = cv2.getPerspectiveTransform(outer_corners, normalized_corners)
-    perspective = cv2.warpPerspective(image, matrix, (width, height))
+    perspective = cv2.warpPerspective(image_border, matrix, (width, height))
+    # show_image(perspective)
+    return perspective
 
 def image_similarity(image1, image2):
     """checks similarity between two images by cross correlation and sees if the pixels are the same
