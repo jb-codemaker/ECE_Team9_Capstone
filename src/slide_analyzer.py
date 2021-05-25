@@ -39,6 +39,9 @@ class Slide:
 def analyze_lecture():
     """iterates through screenshoted lecture
     
+    Returns:
+        slide_list: a list of slide objects
+
     """
     if os.name == 'posix':
         delimiter = '/'
@@ -59,16 +62,20 @@ def analyze_lecture():
         # show_image(slide)
         # initialize slide
         if i == 0:
-            slide_list.append(Slide(slide, i))
+            slide_list.append(Slide(slide, i + 1))
             # check if slide in next frame is the same
         else:
             if check_if_same_slide(slide_list[i-1], slide):
                 slide_list.append(slide_list[i-1])
             else:
-                slide_list.append(Slide(slide,i))
+                slide_list.append(Slide(slide, slide_list[i-1].name + 1))
             
         # if i+1 == 15:
         #     break
+    
+    word_count_and_name = [[int(x.word_count), int(x.name)] for x in slide_list]
+    # TODO: instead of saving individual csv's we will update one
+    np.savetxt(data_directory + delimiter + 'slide.csv', word_count_and_name, delimiter=',', fmt='%d')
     return slide_list
 
 def find_rectangle(contour):
