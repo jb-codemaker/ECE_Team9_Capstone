@@ -1,9 +1,9 @@
 import os
 import cv2
 import numpy as np
-from functools import reduce
 import operator
 from utils import show_image, extend_box, point_in_box
+import pytesseract
 
 class Slide:
     def __init__(self, slide, name):
@@ -265,7 +265,6 @@ def image_similarity(image1, image2):
         boolian: if slide is same true
     
     """
-    
     ones = np.ones((55,55)) 
     scalar = ones.shape[0] ** 2
     kernel = ones / scalar
@@ -273,12 +272,14 @@ def image_similarity(image1, image2):
     img1 = convolve_image(image1, kernel)
     img2 = convolve_image(image2, kernel)
     
-    #show_image(image1, "image1")
-    #show_image(image2, "image2")
+    # show_image(image1, "image1")
+    # show_image(image2, "image2")
+    
     error = compare_image(image1, image2)
     # print(error)
-    
-    if error <= 20:
+
+    threshold = 20
+    if error <= threshold:
         # print("same slide")
         return True
     else:
