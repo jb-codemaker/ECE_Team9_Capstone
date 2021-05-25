@@ -171,8 +171,6 @@ def interactive_diarization(similarity_dict, wav, wav_splits, x_crop=5, show_tim
         current_time = timer() - ref_time
         if current_time < times[i]:
             sleep(times[i] - current_time)
-        elif current_time - 0.2 > times[i]:
-            print("Animation is delayed further than 200ms!", file=stderr)
         return lines + [text]
     
     ani = FuncAnimation(fig, update, frames=len(wav_splits), init_func=init, blit=not show_time,

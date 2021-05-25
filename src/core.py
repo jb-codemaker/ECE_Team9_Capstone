@@ -12,6 +12,7 @@
 import os
 import sys
 import split_video      # Splits .mp4 file
+import audio_model      # Diarizes and counts 
 
 from visualize_data import visualize
 
