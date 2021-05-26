@@ -5,6 +5,7 @@ import datetime
 import cv2
 import numpy as np
 import os
+import sys
 
 def show_image(img, annotation="image"):
     """quickly show image for debugging
@@ -135,24 +136,29 @@ def get_frame(path, current_time):
         nparray of frame
 
     """
-    ffmpeg_command = ["ffmpeg", "-i", "/home/leo/Projects/ECE_Team9_Capstone/data/Constraints_and_Hallucinations.mp4", "-ss", str(current_time.time()), "-vframes","1", "-c:v", "png", "-f", "image2pipe", "pipe:1", '-hide_banner']
+    ffmpeg_command = ["ffmpeg", "-i", path, "-ss", str(current_time.time()), "-vframes","1", "-c:v", "png", "-f", "image2pipe", "pipe:1", '-hide_banner']
     pipe = subprocess.run(ffmpeg_command,
                           stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE,
-                          bufsize=10**8)
-    
+                          stderr=subprocess.PIPE)
+
     matrix = np.asarray(bytearray(pipe.stdout),dtype=np.uint8)
+    # sys.stdout.flush()
     return matrix    
 
 if __name__ == '__main__':
-    # current_time = datetime.datetime.strptime('00:00:00.0625', '%H:%M:%S.%f')
-    # file_path = get_path("output.mp4")
-    # duration = get_duration(file_path)
-    # resolution = 0.0625
-    '''
+    import time
+    current_time = datetime.datetime.strptime('00:00:00.000', '%H:%M:%S.%f')
+    file_path = get_path("class1facingstudents.mov")
+    
+    duration = get_duration(file_path)
+    resolution = 10
+    start_time = time.time()
+    print(duration)
     while current_time <= duration:
+        print(current_time.time())
         frame = get_frame(file_path, current_time)
         img_cv = cv2.imdecode(frame, cv2.IMREAD_ANYCOLOR)
-        show_image(img_cv)
+        # show_image(img_cv)
         current_time = current_time + datetime.timedelta(seconds=resolution)
-    '''
+    print(time.time() - start_time)
+
