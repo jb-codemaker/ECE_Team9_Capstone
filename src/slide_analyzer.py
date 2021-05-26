@@ -403,9 +403,11 @@ if __name__ == '__main__':
     # youtube-dl https://www.youtube.com/watch?v=mwxknB4SgvM&t=792s #
     # move into data directory and name it Constraints_and_Hallucinations.mp4 #
    from analyze_video import screencap_video
-   
+   import time
+   start_time = time.time()
    screencap_video("Constraints_and_Hallucinations.mp4")
-   # slide_list = analyze_lecture()
+   slide_list = analyze_lecture()
+   print(time.time() - start_time)
    # print(slide_list)
    # text = [x.text for x in slide_list]
    # img_list = [x.slide for x in slide_list]
