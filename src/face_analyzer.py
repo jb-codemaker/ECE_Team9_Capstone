@@ -333,19 +333,21 @@ def student_attentiveness():
 if __name__ == '__main__':
     from split_video import split
     from analyze_video import screencap_video
-
-<<<<<<< HEAD
+    import time
+    start_time = time.time()
     lecture = 'class1facingstudents.mov'
     split(lecture, 'students')
     
     screencap_file = 'students-output-video.mp4'
     screencap_video(screencap_file)
-=======
+
     # lecture = 'class1facingstudents.mov'
     # split(lecture, 'students')
 
     # screencap_file = 'students-output-video.mp4'
     # screencap_video(screencap_file)
->>>>>>> slide_analyzer
+
 
     student_list = student_attentiveness()
+    print(time.time() - start_time)
+    # 2038.2424449920654
