@@ -3,7 +3,7 @@ import cv2
 from mtcnn import MTCNN
 import numpy as np
 import math
-from utils import extend_box, point_in_box, show_image
+import utils
 import os
 import logging
 
@@ -138,7 +138,7 @@ def find_student_next_frame(student, next_image):
     top_left_point = (student.face_points['left_eye'][0], student.face_points['left_eye'][1])
     bottom_right_point = (student.face_points['mouth_right'][0], student.face_points['mouth_right'][1])
     
-    student_box = extend_box(top_left_point, bottom_right_point, 50)
+    student_box = utils.extend_box(top_left_point, bottom_right_point, 50)
     
     mask = np.zeros(next_image.shape[:2], dtype=np.uint8)
     mask[student_box[0][1]:student_box[1][1]+1,student_box[0][0]:student_box[1][0]+1] = 255
@@ -164,7 +164,7 @@ def find_student_next_frame(student, next_image):
         # lets test this out
         student.absent_from_frame = 0
 
-    # show_image(rect_img)
+    # utils.show_image(rect_img)
     #return student
 
     
@@ -238,7 +238,7 @@ def find_new_students(student_list, next_frame, index):
         found = False
         top_left = face['keypoints']['left_eye']
         bottom_right = face['keypoints']['mouth_right']
-        box = extend_box(top_left, bottom_right, 50)
+        box = utils.extend_box(top_left, bottom_right, 50)
         
         
         for student in student_list:
@@ -249,9 +249,9 @@ def find_new_students(student_list, next_frame, index):
             # cv2.circle(img, test_top_left,1,(0,0,255),2)
             # cv2.circle(img, test_bottom_right,1,(0,0,255),2)
             # cv2.rectangle(img, extended_top_left, extended_bottom_right, (255,255,0),1)
-            # show_image(img)
+            # utils.show_image(img)
 
-            if point_in_box(box, test_top_left) and point_in_box(box, test_bottom_right):
+            if utils.point_in_box(box, test_top_left) and utils.point_in_box(box, test_bottom_right):
                 found = True
                 #print("found")
                 break
@@ -334,18 +334,17 @@ if __name__ == '__main__':
     from split_video import split
     from analyze_video import screencap_video
 
-<<<<<<< HEAD
+
     lecture = 'class1facingstudents.mov'
     split(lecture, 'students')
     
     screencap_file = 'students-output-video.mp4'
     screencap_video(screencap_file)
-=======
+
     # lecture = 'class1facingstudents.mov'
     # split(lecture, 'students')
 
     # screencap_file = 'students-output-video.mp4'
     # screencap_video(screencap_file)
->>>>>>> slide_analyzer
 
     student_list = student_attentiveness()
