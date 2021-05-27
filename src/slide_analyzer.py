@@ -412,4 +412,3 @@ if __name__ == '__main__':
    # text = [x.text for x in slide_list]
    # img_list = [x.slide for x in slide_list]
    # list(map(show_image, img_list))
-   
