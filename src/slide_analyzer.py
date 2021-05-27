@@ -44,37 +44,30 @@ def analyze_lecture(file_path):
         slide_list: a list of slide objects
 
     """
+    delimiter = utils.get_delimiter()
     
-    # adjust RESOLUTION #
-    resolution = 10.000
+    slide_directory = utils.get_screenshot_dir()  + delimiter +  "teacher"
+    print(slide_directory)
     
-    duration = utils.get_duration(file_path)
-    initial_time = datetime.datetime.strptime('00:00:00.0000', '%H:%M:%S.%f')
-    
-    current_time = initial_time + datetime.timedelta(seconds=resolution)
-    
+    list_of_files = sorted(os.listdir(slide_directory))
     slide_list = []
-    i = 0
-    while current_time <= duration:
-        frame = utils.get_frame(file_path, current_time)
-        img = cv2.imdecode(frame, cv2.IMREAD_ANYCOLOR)
+    for i in range(len(list_of_files)):
+        # print(screenshot_directory + delimiter + list_of_files[i])
+        print(slide_directory + delimiter + list_of_files[i])
+        img = cv2.imread(slide_directory + delimiter + list_of_files[i])
+        #utils.show_image(img)
         slide = find_slide(img)
-        # utils.show_image(slide)
+
         # initialize slide
         if i == 0:
             slide_list.append(Slide(slide, i + 1))
-            previous_slide = slide
             # check if slide in next frame is the same
         else:
-            if check_if_same_slide(previous_slide, slide):
+            if check_if_same_slide(slide_list[i-1], slide):
                 slide_list.append(slide_list[i-1])
             else:
                 slide_list.append(Slide(slide, slide_list[i-1].name + 1))
                 
-        previous_slide = slide
-        print(i)
-        i+=1
-        current_time = current_time + datetime.timedelta(seconds=resolution)    
         # if i+1 == 15:
         #     break
     
@@ -412,8 +405,10 @@ if __name__ == '__main__':
     ###### IMPORTANT #########
     # youtube-dl https://www.youtube.com/watch?v=mwxknB4SgvM&t=792s #
     # move into data directory and name it Constraints_and_Hallucinations.mp4 #
+    import split_video
     import time
     start_time = time.time()
+    #split_video.split("Constraints_and_Hallucinations.mp4","teacher")
     path = utils.get_path("Constraints_and_Hallucinations.mp4")
     slide_list = analyze_lecture(path)
     print(time.time() - start_time)

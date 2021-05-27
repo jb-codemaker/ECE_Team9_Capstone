@@ -104,6 +104,20 @@ def get_delimiter():
         delimiter = '\\'
     return delimiter
 
+
+def get_screenshot_dir():
+    """returns screenshot directory
+
+    Returns:
+        screenshot directory
+
+    """
+    delimiter = get_delimiter()
+    data_dir = get_data_dir()
+    screenshot_dir = data_dir + delimiter + 'screenshot'
+
+    return screenshot_dir
+
 def get_duration(path):
     """gets length of video
 
@@ -140,7 +154,7 @@ def get_frame(path, current_time):
     pipe = subprocess.run(ffmpeg_command,
                           stdout=subprocess.PIPE,
                           stderr=subprocess.PIPE)
-
+    print(pipe.stdout)
     matrix = np.asarray(bytearray(pipe.stdout),dtype=np.uint8)
     # sys.stdout.flush()
     return matrix    

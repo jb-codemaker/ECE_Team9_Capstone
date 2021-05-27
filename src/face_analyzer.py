@@ -4,7 +4,6 @@ from mtcnn import MTCNN
 import numpy as np
 import math
 import utils
-import os
 import logging
 
 logging.getLogger('tensorflow').disabled = True
@@ -165,7 +164,7 @@ def find_student_next_frame(student, next_image):
         student.absent_from_frame = 0
 
     # utils.show_image(rect_img)
-    #return student
+    # return student
 
     
 def get_angle(student):
@@ -294,29 +293,27 @@ def student_attentiveness():
         a csv of attentiveness
 
     """
-    if os.name == 'posix':
-        delimiter = '/'
-    else:
-        delimiter = '\\'
+    delimiter = utils.get_delimiter()
+    data_directory = utils.get_data_dir()
+    screenshot_directory = utils.get_screenshot_dir()
+    student_directory = screenshot_directory + "/students"
 
-    current_directory = os.getcwd()
-    data_directory = os.path.abspath(os.path.join(current_directory, os.pardir + delimiter + 'data'))
-    screenshot_directory = os.path.abspath(os.path.join(data_directory + delimiter + 'screenshot'))
-    list_of_files = sorted(os.listdir(screenshot_directory))
+    list_of_files = sorted(os.listdir(student_directory))
 
     for i in range(len(list_of_files)):
-        img = cv2.imread(screenshot_directory + delimiter + list_of_files[i])
-        print(screenshot_directory + delimiter + list_of_files[i])
+        img = cv2.imread(student_directory + delimiter + list_of_files[i])
+        print(student_directory + delimiter + list_of_files[i])
         if i == 0:
             student_list = initial_frame(img)
         for student in student_list:
             try:
-                next_frame = cv2.imread(screenshot_directory + delimiter + list_of_files[i+1])
+                next_frame = cv2.imread(student_directory + delimiter + list_of_files[i+1])
                 find_student_next_frame(student, next_frame)
             except IndexError:
                 break
         find_new_students(student_list, next_frame, i + 1)
         check_for_absent(student_list)
+    
     classroom_angles = []         
     for student in student_list:
         get_mode_angle(student)
@@ -332,19 +329,10 @@ def student_attentiveness():
 
 if __name__ == '__main__':
     from split_video import split
-    from analyze_video import screencap_video
-
-
+    import time
+    
+    start_time = time.time()
     lecture = 'class1facingstudents.mov'
     split(lecture, 'students')
-    
-    screencap_file = 'students-output-video.mp4'
-    screencap_video(screencap_file)
-
-    # lecture = 'class1facingstudents.mov'
-    # split(lecture, 'students')
-
-    # screencap_file = 'students-output-video.mp4'
-    # screencap_video(screencap_file)
-
     student_list = student_attentiveness()
+    print(time.time() - start_time)
