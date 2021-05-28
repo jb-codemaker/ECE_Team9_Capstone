@@ -179,7 +179,7 @@ def audio_analyze():
             word_count = str(rec).split()
             with open(data_directory + delimiter + 'audio_wpm_csv.csv', mode='a', newline='') as audio_wpm_csv:
                 audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-                audio_wpm_csv_writer.writerow([str(i), len(word_count), rec])
+                audio_wpm_csv_writer.writerow([str(second_count), len(word_count), rec])
         i += 1
         second_count += 10
 
