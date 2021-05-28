@@ -103,7 +103,7 @@ def audio_analyze():
 
     with open(data_directory + delimiter + 'audio_wpm_csv.csv', mode='w', newline='') as audio_wpm_csv:
         audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        audio_wpm_csv_writer.writerow(['Chunk (10 sec)', 'WPM', 'Text'])
+        audio_wpm_csv_writer.writerow(['Second', 'WPM', 'Text'])
 
     ##------------------resemblyzer---------#####
     ## Open source project from https://github.com/resemble-ai/Resemblyzer
@@ -153,6 +153,7 @@ def audio_analyze():
 
     ############ Testing Sphinx ##########
     i = 0
+    second_count = 10
     logger.info("Sphinx recognizer with chunks")
     for chunk in chunks:
         filename = data_directory + delimiter + 'chunk'+str(i)+'.wav'
@@ -168,7 +169,7 @@ def audio_analyze():
             word_count = str(rec).split()
             with open(data_directory + delimiter + 'audio_wpm_csv.csv', mode='a', newline='') as audio_wpm_csv:
                 audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-                audio_wpm_csv_writer.writerow([str(i), len(word_count), rec])
+                audio_wpm_csv_writer.writerow([str(second_count), len(word_count), rec])
         except sr.UnknownValueError:
             logger.info("Sphinx could not understand audio")
         except sr.RequestError as e:
@@ -180,6 +181,7 @@ def audio_analyze():
                 audio_wpm_csv_writer = csv.writer(audio_wpm_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 audio_wpm_csv_writer.writerow([str(i), len(word_count), rec])
         i += 1
+        second_count += 10
 
     ######### End sphinx test ##########
 
