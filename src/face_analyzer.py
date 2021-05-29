@@ -306,7 +306,7 @@ def student_attentiveness():
 
     for i in range(len(list_of_files)):
         img = cv2.imread(screenshot_directory + delimiter + list_of_files[i])
-        # print(screenshot_directory + delimiter + list_of_files[i])
+        print(screenshot_directory + delimiter + list_of_files[i])
         if i == 0:
             student_list = initial_frame(img)
         for student in student_list:
@@ -334,12 +334,12 @@ if __name__ == '__main__':
     from split_video import split
     from analyze_video import screencap_video
     import time
-    start_time = time.time()
+    # start_time = time.time()
     
-    lecture = 'class1facingstudents.mov'
-    split(lecture, 'students')
+    # lecture = 'class1facingstudents.mov'
+    # split(lecture, 'students')
     screencap_file = 'students-output-video.mp4'
-    screencap_video(screencap_file)
-    student_list = student_attentiveness()
-    print(time.time() - start_time)
+    # screencap_video(screencap_file)
+    # student_list = student_attentiveness()
+    # print(time.time() - start_time)
     # 2038.2424449920654
