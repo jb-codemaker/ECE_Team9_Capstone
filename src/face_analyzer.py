@@ -331,8 +331,8 @@ if __name__ == '__main__':
     from split_video import split
     import time
     
-    start_time = time.time()
-    lecture = 'class1facingstudents.mov'
+    # start_time = time.time()
+    lecture = 'scheme.mkv'
     split(lecture, 'students')
     student_list = student_attentiveness()
-    print(time.time() - start_time)
+    # print(time.time() - start_time)

@@ -55,9 +55,9 @@ def analyze_lecture(file_path):
         # print(screenshot_directory + delimiter + list_of_files[i])
         print(slide_directory + delimiter + list_of_files[i])
         img = cv2.imread(slide_directory + delimiter + list_of_files[i])
-        #utils.show_image(img)
+        utils.show_image(img)
         slide = find_slide(img)
-
+        # utils.show_image(slide)
         # initialize slide
         if i == 0:
             slide_list.append(Slide(slide, i + 1))
@@ -408,8 +408,8 @@ if __name__ == '__main__':
     import split_video
     import time
     start_time = time.time()
-    #split_video.split("Constraints_and_Hallucinations.mp4","teacher")
-    path = utils.get_path("Constraints_and_Hallucinations.mp4")
+    #split_video.split("scheme.mkv","teacher")
+    path = utils.get_path("scheme.mkv")
     slide_list = analyze_lecture(path)
     print(time.time() - start_time)
     # print(slide_list)

@@ -43,7 +43,7 @@ def split(file_name, perspective):
         os.mkdir(screenshot_dir + delimiter + perspective)
     
     os.system('ffmpeg -i '+ '"' + parent_file + '"' + ' -vn -acodec pcm_s16le -ar 44100 -ac 2 '+ '"' + data_directory + delimiter + perspective + '-output-audio.wav'  + '"' + ' -hide_banner -loglevel error')
-    os.system("ffmpeg -i " + parent_file + " -vf fps=1/10 " +screenshot_dir+delimiter+perspective+delimiter+ "image.%04d.jpg -hide_banner -loglevel error")
+    os.system("ffmpeg -i " + parent_file + " -vf fps=1/10 " + screenshot_dir + delimiter + perspective+delimiter + "image.%04d.jpg -hide_banner -loglevel error")
 
     return perspective
 
