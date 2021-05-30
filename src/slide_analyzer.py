@@ -55,6 +55,7 @@ def analyze_lecture():
     for i in range(len(list_of_files)):
         # print(screenshot_directory + delimiter + list_of_files[i])
         img = cv2.imread(screenshot_directory + delimiter + list_of_files[i])
+        # show_image(img)
         slide = find_slide(img)
         # show_image(slide)
         # initialize slide
@@ -313,7 +314,7 @@ def image_similarity(image1, image2):
     error = compare_image(image1, image2)
     # print(error)
 
-    threshold = 20
+    threshold = 5
     if error <= threshold:
         # print("same slide")
         return True
@@ -405,10 +406,10 @@ if __name__ == '__main__':
    from analyze_video import screencap_video
    import time
    start_time = time.time()
-   screencap_video("Constraints_and_Hallucinations.mp4")
+   screencap_video("racket.mkv")
    slide_list = analyze_lecture()
    print(time.time() - start_time)
    # print(slide_list)
-   # text = [x.text for x in slide_list]
+   text = [x.text for x in slide_list]
    # img_list = [x.slide for x in slide_list]
    # list(map(show_image, img_list))
