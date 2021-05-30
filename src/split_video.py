@@ -23,7 +23,6 @@ def split(file_name, perspective):
 
         
     """
-
     current_directory = os.getcwd()
     delimiter = utils.get_delimiter()
     data_directory = utils.get_data_dir()
@@ -37,10 +36,16 @@ def split(file_name, perspective):
     ###### DO NOT MESS WITH THIS ######
     if os.path.exists(screenshot_dir + delimiter + perspective):
         shutil.rmtree(screenshot_dir + delimiter + perspective)
+
+    if os.path.exists(data_directory + delimiter + "audio"):
+        shutil.rmtree(data_directory + delimiter + "audio")
     ###################################
     
     if not os.path.exists(screenshot_dir + delimiter + perspective):
         os.mkdir(screenshot_dir + delimiter + perspective)
+        
+    if not os.path.exists(data_directory + delimiter + "audio"):
+        os.mkdir(data_directory + delimiter + "audio")
     
     os.system('ffmpeg -i '+ '"' + parent_file + '"' + ' -vn -acodec pcm_s16le -ar 44100 -ac 2 '+ '"' + data_directory + delimiter + perspective + '-output-audio.wav'  + '"' + ' -hide_banner -loglevel error')
     os.system("ffmpeg -i " + parent_file + " -vf fps=1/10 " + screenshot_dir + delimiter + perspective+delimiter + "image.%04d.jpg -hide_banner -loglevel error")
@@ -59,4 +64,5 @@ if __name__ == '__main__':
     split(file_name, perspective)
 
     print("\nSplit function complete\n")
+
     '''

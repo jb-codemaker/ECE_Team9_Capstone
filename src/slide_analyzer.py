@@ -34,39 +34,38 @@ class Slide:
     
 
 # iterate through files
-def analyze_lecture(file_path):
+def analyze_lecture():
     """analyzes slides in lecture
-    
-    Args:
-        file_path: path to video
-    
+   
     Returns:
         slide_list: a list of slide objects
 
     """
+    print("lecture RUNNING")
     delimiter = utils.get_delimiter()
     
     slide_directory = utils.get_screenshot_dir()  + delimiter +  "teacher"
-    print(slide_directory)
     
     list_of_files = sorted(os.listdir(slide_directory))
+    
     slide_list = []
     for i in range(len(list_of_files)):
-        # print(screenshot_directory + delimiter + list_of_files[i])
         print(slide_directory + delimiter + list_of_files[i])
         img = cv2.imread(slide_directory + delimiter + list_of_files[i])
-        utils.show_image(img)
+        # utils.show_image(img)
         slide = find_slide(img)
         # utils.show_image(slide)
         # initialize slide
         if i == 0:
             slide_list.append(Slide(slide, i + 1))
+            previous_slide = slide
             # check if slide in next frame is the same
         else:
-            if check_if_same_slide(slide_list[i-1], slide):
+            if check_if_same_slide(previous_slide, slide):
                 slide_list.append(slide_list[i-1])
             else:
                 slide_list.append(Slide(slide, slide_list[i-1].name + 1))
+        previous_slide = slide
                 
         # if i+1 == 15:
         #     break
@@ -316,7 +315,7 @@ def image_similarity(image1, image2):
     error = compare_image(image1, image2)
     # print(error)
 
-    threshold = 20
+    threshold = 3
     if error <= threshold:
         # print("same slide")
         return True
@@ -408,9 +407,8 @@ if __name__ == '__main__':
     import split_video
     import time
     start_time = time.time()
-    #split_video.split("scheme.mkv","teacher")
-    path = utils.get_path("scheme.mkv")
-    slide_list = analyze_lecture(path)
+    split_video.split("racket.mkv","teacher")
+    path = utils.get_path("racket.mkv")
+    slide_list = analyze_lecture()
     print(time.time() - start_time)
-    # print(slide_list)
     # text = [x.text for x in slide_list]

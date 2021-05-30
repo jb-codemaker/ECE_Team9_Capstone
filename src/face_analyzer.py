@@ -5,14 +5,14 @@ import numpy as np
 import math
 import utils
 import logging
-
+import os
 logging.getLogger('tensorflow').disabled = True
 
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
 
-# print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 # tf.debugging.set_log_device_placement(True)
 
 class Student:
@@ -146,7 +146,7 @@ def find_student_next_frame(student, next_image):
     face = find_faces(rect_img)
     if len(face) > 1:
         # TODO(#17): find a way to decrease dx and call function again
-        #print("more faces")
+        # print("more faces")
         
         # TODO(#20): add noise here instead of zero
         student.attention_angle_list.append(0)
@@ -160,7 +160,6 @@ def find_student_next_frame(student, next_image):
         student.update_face = face[0]
         get_pose_direction(student,next_image)
         get_angle(student)
-        # lets test this out
         student.absent_from_frame = 0
 
     # utils.show_image(rect_img)
@@ -215,6 +214,7 @@ def get_attention_per_frame(student):
     """
     attention_list = student.attention_angle_list
     mode_attention_angle = student.mode_attention_angle
+
     student.attention_angle_per_frame = [x/mode_attention_angle for x in attention_list]
     
 
@@ -320,10 +320,13 @@ def student_attentiveness():
         get_attention_per_frame(student)
         classroom_angles.append(student.attention_angle_per_frame)
 
+        
+
+
     avg_across_lecture = np.mean(classroom_angles,axis=0)
     np.savetxt(data_directory + delimiter + 'attentiveness.csv', avg_across_lecture, delimiter=',', header='attentiveness')
 
-    #return classroom_angles
+    # return classroom_angles
     return student_list
 
 
@@ -331,8 +334,8 @@ if __name__ == '__main__':
     from split_video import split
     import time
     
-    # start_time = time.time()
-    lecture = 'scheme.mkv'
-    split(lecture, 'students')
+    start_time = time.time()
+    #lecture = 'class1facingstudents.mov'
+    #split(lecture, 'students')
     student_list = student_attentiveness()
-    # print(time.time() - start_time)
+    print(time.time() - start_time)
