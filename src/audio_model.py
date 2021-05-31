@@ -190,5 +190,7 @@ def audio_analyze():
 
 if __name__ == '__main__':
     from split_video import split
-    split('class1facingstudents.mov','students')
+    data_dir = utils.get_data_dir()
+    file_path = os.path.join(data_dir, 'class1facingstudents.mov')
+    split(file_path,'students')
     audio_analyze()

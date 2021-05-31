@@ -58,6 +58,7 @@ def point_in_box(box, test_point):
     else:
         return False
 
+   
 def get_data_dir():
     """
 
@@ -68,7 +69,7 @@ def get_data_dir():
     delimiter = get_delimiter()
     current_directory = os.getcwd()
     data_directory = os.path.abspath(os.path.join(current_directory, os.pardir + delimiter + 'data'))
-    
+   
     data_directory = data_directory.replace(' ', '\ ')
 
     return data_directory

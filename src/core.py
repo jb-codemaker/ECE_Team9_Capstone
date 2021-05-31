@@ -24,28 +24,28 @@ def main(file_name_1,file_name_2):
     ray.init()
     
     @ray.remote
-    def split_student(file_name_1):
+    def split_student(file_path1):
         """this is just for concurrency
 
         Args:
-           file_name_1: file_name for students
+           file_path1: file_path for students
 
         Returns:
            the split function for students
         """
-        return split_video.split(file_name_1, "students")
+        return split_video.split(file_path1, "students")
 
     @ray.remote
-    def split_teacher(file_name_2):
+    def split_teacher(file_path2):
         """this is just for concurrency
 
         Args:
-           file_name_2: file_name for teachers
+           file_path2: file_path for teachers
 
         Returns:
            the split function for teachers
         """
-        return split_video.split(file_name_2, "teacher")
+        return split_video.split(file_path2, "teacher")
     
     # start the process
     split_funcs = [split_student.remote(file_name_1),split_teacher.remote(file_name_2)]
@@ -96,11 +96,15 @@ def main(file_name_1,file_name_2):
 if __name__ == '__main__':
     
     # Take args and split video/audio into seperate files
-    if len(sys.argv) < 3:
-        print("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"class1facingstudents.mov\" \"teacher_lecture.mov\"")
-        sys.exit()
-    file_name_1 = sys.argv[1]
-    file_name_2 = sys.argv[2]
-    main(file_name_1, file_name_2)
+    # if len(sys.argv) < 3:
+    #     print("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/class1facingstudents.mov\" \"path/to/teacher_lecture.mov\"")
+    #     sys.exit()
+    data_dir = utils.get_data_dir()
+    teacher = os.path.join(data_dir,'racket.mkv')
+    students = os.path.join(data_dir,'class1facingstudents.mov')
+    
+    file_path1 = students# sys.argv[1] 
+    file_path2 = teacher# sys.argv[2]
+    main(file_path1, file_path2)
     # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
     print("ALL DONE")

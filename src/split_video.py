@@ -23,12 +23,11 @@ def split(file_name, perspective):
 
         
     """
-    current_directory = os.getcwd()
     delimiter = utils.get_delimiter()
     data_directory = utils.get_data_dir()
     screenshot_dir = utils.get_screenshot_dir()
     
-    parent_file =  data_directory + delimiter + file_name
+    parent_file = file_name
     
     if os.path.exists(data_directory + delimiter + perspective + '-output-audio.wav'):
         os.remove(data_directory + delimiter + perspective + '-output-audio.wav')
@@ -53,7 +52,10 @@ def split(file_name, perspective):
     return perspective
 
 if __name__ == '__main__':
-    split('class1facingstudents.mov','students')
+    file_name = 'class1facingstudents.mov'
+    data_directory = utils.get_data_dir()
+    file_path = os.path.join(data_directory, file_name)
+    split(file_path, 'students')
     
     '''
     if len(sys.argv) < 3:
