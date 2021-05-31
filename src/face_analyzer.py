@@ -1,3 +1,5 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 import tensorflow as tf
 import cv2
 from mtcnn import MTCNN
@@ -6,7 +8,8 @@ import math
 import random
 import utils
 import logging
-import os
+
+
 logging.getLogger('tensorflow').disabled = True
 
 config = tf.compat.v1.ConfigProto()
