@@ -53,9 +53,11 @@ def main():
         """
         return split_video.split(file_name_2, "teacher")
     
-    ids = [split_student.remote(file_name_1),split_teacher.remote(file_name_2)]
+    # start the process
+    split_funcs = [split_student.remote(file_name_1),split_teacher.remote(file_name_2)]
 
-    [ray.get(x) for x in ids]
+    # block before next section
+    [ray.get(x) for x in split_funcs]
 
     @ray.remote(num_gpus=1)
     def student_call():
@@ -83,11 +85,13 @@ def main():
            the audio analyzer function
         """
         return audio_model.audio_analyze()
-    
-    obj_call_list = [student_call.remote(), slide_call.remote(), audio_call.remote()]
 
-    [ray.get(x) for x in obj_call_list]
-    print("ALL DONE")
+    # start the process
+    call_funcs = [student_call.remote(), slide_call.remote(), audio_call.remote()]
+
+    # block before next section
+    [ray.get(x) for x in call_funcs]
+    ray.shutdown()
 
     # TODO(#23): Clone https://github.com/tyiannak/pyAudioAnalysis.git
     #       Audio analysis tool
@@ -97,4 +101,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+    print("ALL DONE")
     # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")

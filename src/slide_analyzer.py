@@ -5,10 +5,9 @@ import utils
 import pytesseract
 import datetime
 
-# TODO: Remove slide image
+
 class Slide:
     def __init__(self, slide, name):
-        # self.slide = slide #img
         self.name = name
         self.get_text(slide)
         self.word_count = len(self.text.split())

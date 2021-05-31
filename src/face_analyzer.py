@@ -3,6 +3,7 @@ import cv2
 from mtcnn import MTCNN
 import numpy as np
 import math
+import random
 import utils
 import logging
 import os
@@ -23,6 +24,7 @@ class Student:
         self.box = face['box']
         self.face_points = face['keypoints']
         self.attention_points = (0,0)
+        self.reference_points = (0,0)
         self.attention_angle_list = []
         self.mode_attention_angle = 0
         self.attention_angle_per_frame = []
@@ -99,10 +101,21 @@ def get_pose_direction(student,im):
 
     # for p in image_points:
     #     cv2.circle(im, (int(p[0]), int(p[1])), 3, (0, 0, 255), -1)
-      
-    student.attention_points = ((int(image_points[0][0]), int(image_points[0][1])),(int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1])))
+    # utils.show_image(im)
+    student.attention_points = ((int(image_points[0][0]), int(image_points[0][1])) ,(int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1])))
 
+    # make a reference line
+    vect = make_vect(student.attention_points[0],student.attention_points[1])
+    
+    d = get_magnitude(vect)
 
+    
+    student.reference_points = ((int(image_points[0][0]), int(image_points[0][1])),(int(image_points[0][0] + d), int(image_points[0][1])))
+    
+    # cv2.line(im,student.attention_points[0],student.attention_points[1], (255,0,0), 2)
+    # cv2.line(im, student.reference_points[0],student.reference_points[1],(0,255,0),2)
+    # utils.show_image(im)
+    
 
 def initial_frame(img):
     """initializes student object
@@ -149,11 +162,11 @@ def find_student_next_frame(student, next_image):
         # print("more faces")
         
         # TODO(#20): add noise here instead of zero
-        student.attention_angle_list.append(0)
+        student.attention_angle_list.append(random.randint(0,360))
     if len(face) < 1:
         #if no faceappend with noise
         #print("no face")
-        student.attention_angle_list.append(0)
+        student.attention_angle_list.append(random.randint(0,360))
         student.absent_from_frame += 1
             
     if len(face) == 1:
@@ -164,22 +177,79 @@ def find_student_next_frame(student, next_image):
 
     # utils.show_image(rect_img)
     # return student
+def make_vect(point1,point2):
+    """makes a vector out of 2 points
 
+    Args:
+       point1: first point
+       point2: second point
+
+    Returns:
+        vector of 2 points (tuple)
+
+    """
     
+    return ((point2[0] - point1[0]),(point2[1] - point1[1]))
+
+def get_magnitude(vector):
+    """gets the magnitude of a vector
+
+    Args:
+       vector: vector to get a magnitude (tuple)
+
+    Returns:
+        the magnitude of a vector
+
+    """
+    return np.sqrt((vector[0])**2 + (vector[1])**2)
+
 def get_angle(student):
     """gets the angle of the slope of the points (best we could do), appends that angle to angle list
+
 
     Args:
        student: thestudent working on
     """
+    # NOTE: a bit over engineered but its sunday :)
+    # turn attention_points and reference_points into vectors
     attention_points = student.attention_points
-    try:
-        m = ((attention_points[1][1] - attention_points[0][1])/(attention_points[1][0] - attention_points[0][0]))
-        angle = int(math.degrees(math.atan(m)))
-        student.attention_angle_list.append(angle)
-    except ZeroDivisionError:
-        angle = -90
-        student.attention_angle_list.append(angle)
+    reference_points = student.reference_points
+    
+    attention_vec = make_vect(attention_points[0], attention_points[1])
+
+    reference_vec = make_vect(reference_points[0], reference_points[1])
+    # print(attention_points)
+    # print(attention_vec)
+
+    # get angle between those vectors
+    ## get magnitude of two vectors
+    attention_mag = get_magnitude(attention_vec)
+    reference_mag = get_magnitude(reference_vec)
+
+    ## dot product
+    dot_product = lambda a, b: (a[0] * b[0]) + (a[1] * b[1])
+
+    attention_reference_dot = dot_product(attention_vec, reference_vec)
+    # print("attention reference dot " + str(attention_reference_dot))
+    # print("attention magnitude " + str(attention_mag))
+    # print("reference magnitude " + str(reference_mag))
+    
+    angle = math.degrees(math.acos(attention_reference_dot/(attention_mag*reference_mag)))
+    # append angle
+    student.attention_angle_list.append(angle)
+    print("\n")
+    print("angle " + str(angle))
+    print("\n")
+    
+    # This just got the arctan for the slope but it was giving bad results due to quardenants
+    # couldnt do atan2 due to no x,y components
+    # try:
+    #     m = ((attention_points[1][1] - attention_points[0][1])/(attention_points[1][0] - attention_points[0][0]))
+    #     angle = int(math.degrees(math.atan(m)))
+    #     student.attention_angle_list.append(angle)
+    # except ZeroDivisionError:
+    #     angle = -90
+    #     student.attention_angle_list.append(angle)
 
 def get_mode_angle(student):
     """gets the mode angle (students are assumed to be paying attention most of the time)
