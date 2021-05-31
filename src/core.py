@@ -19,15 +19,9 @@ import face_analyzer
 import slide_analyzer
 from visualize_data import visualize
 
-def main():
+def main(file_name_1,file_name_2):
+    
     ray.init()
-    # Take args and split video/audio into seperate files
-    # if len(sys.argv) < 3:
-    #     print("\nFile and Perspective 1 or 2 is needed")
-    #     sys.exit()
-        
-    file_name_1 = "class1facingstudents.mov" #sys.argv[1]
-    file_name_2 = "racket.mkv" #sys.argv[2]
     
     @ray.remote
     def split_student(file_name_1):
@@ -100,6 +94,13 @@ def main():
     #       Audio analysis tool
 
 if __name__ == '__main__':
-    main()
-    print("ALL DONE")
+    
+    # Take args and split video/audio into seperate files
+    if len(sys.argv) < 3:
+        print("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"class1facingstudents.mov\" \"teacher_lecture.mov\"")
+        sys.exit()
+    file_name_1 = sys.argv[1]
+    file_name_2 = sys.argv[2]
+    main(file_name_1, file_name_2)
     # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
+    print("ALL DONE")

@@ -48,15 +48,9 @@ def analyze_lecture():
     
     slide_list = []
     for i in range(len(list_of_files)):
-<<<<<<< HEAD
-        # print(screenshot_directory + delimiter + list_of_files[i])
-        img = cv2.imread(screenshot_directory + delimiter + list_of_files[i])
-        # show_image(img)
-=======
         # print(slide_directory + delimiter + list_of_files[i])
         img = cv2.imread(slide_directory + delimiter + list_of_files[i])
         # utils.show_image(img)
->>>>>>> core_branch
         slide = find_slide(img)
         # utils.show_image(slide)
         # initialize slide
@@ -319,11 +313,7 @@ def image_similarity(image1, image2):
     error = compare_image(image1, image2)
     # print(error)
 
-<<<<<<< HEAD
-    threshold = 5
-=======
     threshold = 3
->>>>>>> core_branch
     if error <= threshold:
         # print("same slide")
         return True
@@ -412,18 +402,6 @@ if __name__ == '__main__':
     ###### IMPORTANT #########
     # youtube-dl https://www.youtube.com/watch?v=mwxknB4SgvM&t=792s #
     # move into data directory and name it Constraints_and_Hallucinations.mp4 #
-<<<<<<< HEAD
-   from analyze_video import screencap_video
-   import time
-   start_time = time.time()
-   screencap_video("racket.mkv")
-   slide_list = analyze_lecture()
-   print(time.time() - start_time)
-   # print(slide_list)
-   text = [x.text for x in slide_list]
-   # img_list = [x.slide for x in slide_list]
-   # list(map(show_image, img_list))
-=======
     import split_video
     import time
     start_time = time.time()
@@ -432,4 +410,3 @@ if __name__ == '__main__':
     slide_list = analyze_lecture()
     print(time.time() - start_time)
     # text = [x.text for x in slide_list]
->>>>>>> core_branch

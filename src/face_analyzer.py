@@ -99,14 +99,14 @@ def get_pose_direction(student,im):
     # for p in image_points:
     #     cv2.circle(im, (int(p[0]), int(p[1])), 3, (0, 0, 255), -1)
     # utils.show_image(im)
-    student.attention_points = ((int(image_points[0][0]), int(image_points[0][1])) ,(int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1])))
+    student.attention_points = ((int(image_points[0][0]), int(image_points[0][1])), (int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1])))
 
     # make a reference line
     vect = make_vect(student.attention_points[0],student.attention_points[1])
     
     d = get_magnitude(vect)
 
-    student.reference_points = ((int(image_points[0][0]), int(image_points[0][1])),(int(image_points[0][0] + d), int(image_points[0][1])))
+    student.reference_points = ((int(image_points[0][0]), int(image_points[0][1])), (int(image_points[0][0] + d), int(image_points[0][1])))
     
     # cv2.line(im,student.attention_points[0],student.attention_points[1], (255,0,0), 2)
     # cv2.line(im, student.reference_points[0],student.reference_points[1],(0,255,0),2)
@@ -264,7 +264,18 @@ def get_attention_per_frame(student):
     attention_list = student.attention_angle_list
     mode_attention_angle = student.mode_attention_angle
 
-    student.attention_angle_per_frame = [1 - abs((x - mode_attention_angle)/mode_attention_angle) for x in attention_list]
+    attention_angle_per_frame_raw = [abs((x - mode_attention_angle)/mode_attention_angle) for x in attention_list]
+
+    # little hackey but mapping extreme high error to 0.00001
+    attention_angle_per_frame = []
+    for i in attention_angle_per_frame_raw:
+        if i > 1.0:
+            attention_angle_per_frame.append(.000001)
+        else:
+            attention_angle_per_frame.append(1 - i)
+    
+
+    student.attention_angle_per_frame = attention_angle_per_frame
     
 
 
@@ -376,7 +387,7 @@ if __name__ == '__main__':
     import time
     
     start_time = time.time()
-    lecture = 'class1facingstudents.mov'
-    split(lecture, 'students')
+    # lecture = 'class1facingstudents.mov'
+    # split(lecture, 'students')
     student_list = student_attentiveness()
     print(time.time() - start_time)
