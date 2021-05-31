@@ -40,7 +40,6 @@ def analyze_lecture():
         slide_list: a list of slide objects
 
     """
-    print("lecture RUNNING")
     delimiter = utils.get_delimiter()
     
     slide_directory = utils.get_screenshot_dir()  + delimiter +  "teacher"
@@ -49,7 +48,7 @@ def analyze_lecture():
     
     slide_list = []
     for i in range(len(list_of_files)):
-        print(slide_directory + delimiter + list_of_files[i])
+        # print(slide_directory + delimiter + list_of_files[i])
         img = cv2.imread(slide_directory + delimiter + list_of_files[i])
         # utils.show_image(img)
         slide = find_slide(img)
