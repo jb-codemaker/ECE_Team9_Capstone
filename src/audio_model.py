@@ -31,6 +31,7 @@ from diarize import *
 from pathlib import Path
 
 import logging  # logging instead of printing
+import utils
 
 # Initiate logging
 # Create logfile
@@ -78,27 +79,24 @@ def populate_speaker(diarize_file, similarity_dict):
 
 
 def audio_analyze():
-    if os.name == 'posix':
-        delimiter = '/'
-    else: 
-        delimiter = '\\'
+    
+    delimiter = utils.get_delimiter()
+    data_directory = utils.get_data_dir()
+    audio_directory = data_directory + delimiter + 'audio'
 
-    current_directory = os.getcwd()
-    data_directory = os.path.abspath(os.path.join(current_directory, os.pardir + delimiter + 'data'))
-
-    AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), '0-output-audio.wav')
-
-    myaudio = AudioSegment.from_file(AUDIO_FILE , "wav") 
+    AUDIO_FILE = data_directory + delimiter + 'students-output-audio.wav'
+    
+    myaudio = AudioSegment.from_file(AUDIO_FILE, "wav") 
     chunk_length_ms = 10000 # pydub calculates in millisec
     chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks from audio file
 
     # Remove old chunks
-    for filename in glob.glob(data_directory + delimiter + 'chunk*'):
+    for filename in glob.glob(audio_directory + delimiter + 'chunk*'):
         os.remove(filename)
 
     # Create new chunks
     for i, chunk in enumerate(chunks):
-        chunk_name = data_directory + delimiter + "chunk{0}.wav".format(i)
+        chunk_name = audio_directory + delimiter + "chunk{0}.wav".format(i)
         chunk.export(chunk_name, format="wav")
 
     with open(data_directory + delimiter + 'audio_wpm_csv.csv', mode='w', newline='') as audio_wpm_csv:
@@ -146,7 +144,7 @@ def audio_analyze():
     populate_speaker(diarize_file, similarity_dict)
 
     ## Run the interactive demo
-    interactive_diarization(similarity_dict, wav, wav_splits)
+    # interactive_diarization(similarity_dict, wav, wav_splits)
     ##--------------------- end resemblyzer----------###
 
     now = datetime.now()
@@ -155,7 +153,7 @@ def audio_analyze():
     i = 0
     logger.info("Sphinx recognizer with chunks")
     for chunk in chunks:
-        filename = data_directory + delimiter + 'chunk'+str(i)+'.wav'
+        filename = audio_directory + delimiter + 'chunk'+str(i)+'.wav'
         logger.info("Processing chunk...")
         file = filename
         r = sr.Recognizer()
@@ -187,3 +185,8 @@ def audio_analyze():
     process_duration = str(datetime.now() - now).split('.')[0]
     duration = 'Sphink took ' + process_duration + ' to process'
     logger.info(duration)
+
+if __name__ == '__main__':
+    from split_video import split
+    split('class1facingstudents.mov','students')
+    audio_analyze()

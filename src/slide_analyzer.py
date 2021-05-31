@@ -1,19 +1,19 @@
 import os
 import cv2
 import numpy as np
-from utils import show_image, extend_box, point_in_box
+import utils
 import pytesseract
+import datetime
+
 
 class Slide:
     def __init__(self, slide, name):
-        "slide object has cropped img of slide"
-        self.slide = slide #img
         self.name = name
-        self.get_text(self.slide)
+        self.get_text(slide)
         self.word_count = len(self.text.split())
         
     def __repr__(self):
-        return "slide(image name text word_count)"
+        return "slide(name text word_count)"
 
     def __str__(self):
         return "slide: {} {}".format(self.name, self.word_count)
@@ -34,45 +34,51 @@ class Slide:
 
 # iterate through files
 def analyze_lecture():
-    """iterates through screenshoted lecture
-    
+    """analyzes slides in lecture
+   
     Returns:
         slide_list: a list of slide objects
 
     """
-    if os.name == 'posix':
-        delimiter = '/'
-    else:
-        delimiter = '\\'
+    delimiter = utils.get_delimiter()
     
-    current_directory = os.getcwd()
-    data_directory = os.path.abspath(os.path.join(current_directory, os.pardir + delimiter + 'data'))
-    screenshot_directory = os.path.abspath(os.path.join(data_directory + delimiter + 'screenshot'))
+    slide_directory = utils.get_screenshot_dir()  + delimiter +  "teacher"
     
-    list_of_files = sorted(os.listdir(screenshot_directory))
-
+    list_of_files = sorted(os.listdir(slide_directory))
+    
     slide_list = []
     for i in range(len(list_of_files)):
+<<<<<<< HEAD
         # print(screenshot_directory + delimiter + list_of_files[i])
         img = cv2.imread(screenshot_directory + delimiter + list_of_files[i])
         # show_image(img)
+=======
+        # print(slide_directory + delimiter + list_of_files[i])
+        img = cv2.imread(slide_directory + delimiter + list_of_files[i])
+        # utils.show_image(img)
+>>>>>>> core_branch
         slide = find_slide(img)
-        # show_image(slide)
+        # utils.show_image(slide)
         # initialize slide
         if i == 0:
             slide_list.append(Slide(slide, i + 1))
+            previous_slide = slide
             # check if slide in next frame is the same
         else:
-            if check_if_same_slide(slide_list[i-1], slide):
+            if check_if_same_slide(previous_slide, slide):
                 slide_list.append(slide_list[i-1])
             else:
                 slide_list.append(Slide(slide, slide_list[i-1].name + 1))
-            
+        previous_slide = slide
+                
         # if i+1 == 15:
         #     break
     
     word_count_and_name = [[int(x.word_count), int(x.name)] for x in slide_list]
     # TODO(#24): instead of saving individual csv's we will update one
+    
+    delimiter = utils.get_delimiter()
+    data_directory = utils.get_data_dir()
     np.savetxt(data_directory + delimiter + 'slide.csv', word_count_and_name, delimiter=',', fmt='%d')
     return slide_list
 
@@ -147,7 +153,7 @@ def find_slide(img):
             # if find_rectangle(cnts[i]):
                 # x,y,w,h = cv2.boundingRect(cnts[i])
                 # cv2.rectangle(img,(x, y), (x+w, y+h), (0, 255, 0),2)
-                # show_image(img)
+                # utils.show_image(img)
                 inner_cnts.append(cnts[i])
     
     # TODO(#19): edit out teacher
@@ -158,13 +164,13 @@ def find_slide(img):
         crop = img[y:y+h, x:x+w]
         height, width = crop.shape[:2]
         slide = fix_perspective(crop, height, width)
-        # show_image(crop, "crop")
-        # show_image(slide, "fixed perspective")
+        # utils.show_image(crop, "crop")
+        # utils.show_image(slide, "fixed perspective")
 
         # TODO(#25): decide whether you like sharpend or unsharpened
         kernel = np.array([[-1,-1,-1], [-1,9,-1],[-1,-1,-1]])
         sharpend = cv2.filter2D(slide, -1, kernel)
-        # show_image(sharpend)
+        # utils.show_image(sharpend)
         return sharpend
         
     except ValueError:
@@ -183,10 +189,10 @@ def corners_in_contour(contour, corners):
     """
     corner_found = 0
     x,y,w,h = cv2.boundingRect(contour)
-    box = extend_box((x,y), (x+w,y+h), 5)
+    box = utils.extend_box((x,y), (x+w,y+h), 5)
     
     for corner in corners:
-        if point_in_box(box, corner):
+        if utils.point_in_box(box, corner):
             corner_found += 1
         if corner_found >= 4:
             return True
@@ -216,23 +222,22 @@ def find_corners(img):
 
 # check if current slide is the same as last slide
 # corrilation matrix
-def check_if_same_slide(slide_obj, next_slide):
+def check_if_same_slide(previous_slide, current_slide):
     """the object has the previous slide and the img is the current slide. if the two are the same update the object
 
     Args:
-       slide_obj: slide object
+       previous_slide: slide: slide object
        next_slide:  image to check
     
     
     """
-    current_slide = slide_obj.slide
-    # show_image(current_slide, "current slide")
-    # show_image(next_slide, "next slide")
+    # utils.show_image(current_slide, "current slide")
+    # utils.show_image(next_slide, "next slide")
     height, width = current_slide.shape[:2]
     
-    next_perspective = fix_perspective(next_slide, height, width)
-    # show_image(current_slide, "current slide")
-    # show_image(next_perspective, "next")
+    next_perspective = fix_perspective(previous_slide, height, width)
+    # utils.show_image(current_slide, "current slide")
+    # utils.show_image(next_perspective, "next")
     
     return image_similarity(current_slide, next_perspective)
 
@@ -275,7 +280,7 @@ def fix_perspective(image, height, width):
 
     """
     image_border = make_border(image)
-    # show_image(image_border, "border image")
+    # utils.show_image(image_border, "border image")
     corners = find_corners(image_border)
     normalized_corners = np.float32([[0,0], [width,0], [0,height], [width,height]])
     outer_corners = np.float32(get_outer_corners(corners))
@@ -283,11 +288,11 @@ def fix_perspective(image, height, width):
     # for corner in outer_corners:
     #     x,y = int(corner[0]),int(corner[1])
     #     cv2.circle(image_border, (x,y), 1, (0,0,255),3)
-    # show_image(image_border, "corners")
+    # utils.show_image(image_border, "corners")
     
     matrix = cv2.getPerspectiveTransform(outer_corners, normalized_corners)
     perspective = cv2.warpPerspective(image_border, matrix, (width, height))
-    # show_image(perspective)
+    # utils.show_image(perspective)
     return perspective
 
 def image_similarity(image1, image2):
@@ -308,13 +313,17 @@ def image_similarity(image1, image2):
     img1 = convolve_image(image1, kernel)
     img2 = convolve_image(image2, kernel)
     
-    # show_image(image1, "image1")
-    # show_image(image2, "image2")
+    # utils.show_image(image1, "image1")
+    # utils.show_image(image2, "image2")
     
     error = compare_image(image1, image2)
     # print(error)
 
+<<<<<<< HEAD
     threshold = 5
+=======
+    threshold = 3
+>>>>>>> core_branch
     if error <= threshold:
         # print("same slide")
         return True
@@ -403,6 +412,7 @@ if __name__ == '__main__':
     ###### IMPORTANT #########
     # youtube-dl https://www.youtube.com/watch?v=mwxknB4SgvM&t=792s #
     # move into data directory and name it Constraints_and_Hallucinations.mp4 #
+<<<<<<< HEAD
    from analyze_video import screencap_video
    import time
    start_time = time.time()
@@ -413,3 +423,13 @@ if __name__ == '__main__':
    text = [x.text for x in slide_list]
    # img_list = [x.slide for x in slide_list]
    # list(map(show_image, img_list))
+=======
+    import split_video
+    import time
+    start_time = time.time()
+    split_video.split("racket.mkv","teacher")
+    path = utils.get_path("racket.mkv")
+    slide_list = analyze_lecture()
+    print(time.time() - start_time)
+    # text = [x.text for x in slide_list]
+>>>>>>> core_branch
