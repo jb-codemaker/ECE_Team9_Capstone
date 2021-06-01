@@ -5,7 +5,14 @@ import utils
 import pytesseract
 import datetime
 
-
+debug = False
+if debug == True:
+    sharp = 0
+    delimiter = utils.get_delimiter()
+    debug_dir = utils.get_screenshot_dir() + delimiter + 'debug' + delimiter + 'slide_analyzer'
+    if not os.path.exists(debug_dir):
+        os.makedirs(debug_dir)
+        
 class Slide:
     def __init__(self, slide, name):
         self.name = name
@@ -52,7 +59,15 @@ def analyze_lecture():
         img = cv2.imread(slide_directory + delimiter + list_of_files[i])
         # utils.show_image(img)
         slide = find_slide(img)
-        # utils.show_image(slide)
+        
+        global debug
+        if debug == True:
+            global sharp
+            global delimite
+            global debug_dir
+            cv2.imwrite(debug_dir + delimiter + 'slide_found-' + str(sharp) +'.jpg',slide)
+            sharp +=1
+            
         # initialize slide
         if i == 0:
             slide_list.append(Slide(slide, i + 1))
@@ -405,8 +420,9 @@ if __name__ == '__main__':
     import split_video
     import time
     start_time = time.time()
-    split_video.split("racket.mkv","teacher")
-    path = utils.get_path("racket.mkv")
+    lecture = "racket.mkv"
+    file_path = os.path.join(utils.get_data_dir(),lecture)
+    split_video.split(file_path,"teacher")
     slide_list = analyze_lecture()
     print(time.time() - start_time)
     # text = [x.text for x in slide_list]

@@ -10,6 +10,14 @@ import utils
 import logging
 
 
+debug = False
+if debug == True:
+    pinocchio = 0
+    delimiter = utils.get_delimiter()
+    debug_dir = utils.get_screenshot_dir() + delimiter + 'debug' + delimiter + 'face_analyzer'
+    if not os.path.exists(debug_dir):
+        os.makedirs(debug_dir)
+        
 logging.getLogger('tensorflow').disabled = True
 
 config = tf.compat.v1.ConfigProto()
@@ -111,9 +119,16 @@ def get_pose_direction(student,im):
 
     student.reference_points = ((int(image_points[0][0]), int(image_points[0][1])), (int(image_points[0][0] + d), int(image_points[0][1])))
     
-    # cv2.line(im,student.attention_points[0],student.attention_points[1], (255,0,0), 2)
-    # cv2.line(im, student.reference_points[0],student.reference_points[1],(0,255,0),2)
-    # utils.show_image(im)
+    global debug
+    if debug == True:
+        global pinocchio
+        global debug_dir
+        global delimiter
+        
+        cv2.line(im,student.attention_points[0],student.attention_points[1], (255,0,0), 2)
+        cv2.line(im, student.reference_points[0],student.reference_points[1],(0,255,0),2)
+        cv2.imwrite(debug_dir +delimiter+ 'pinocchio-'+str(pinocchio)+'.jpg', im)
+        pinocchio +=1
     
 
 def initial_frame(img):
