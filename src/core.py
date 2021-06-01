@@ -19,10 +19,9 @@ import face_analyzer
 import slide_analyzer
 from visualize_data import visualize
 
-def main(file_name_1,file_name_2):
-    
+
+def main(file_name_1, file_name_2):
     ray.init()
-    
     @ray.remote
     def split_student(file_path1):
         """this is just for concurrency
@@ -46,9 +45,9 @@ def main(file_name_1,file_name_2):
            the split function for teachers
         """
         return split_video.split(file_path2, "teacher")
-    
+
     # start the process
-    split_funcs = [split_student.remote(file_name_1),split_teacher.remote(file_name_2)]
+    split_funcs = [split_student.remote(file_name_1), split_teacher.remote(file_name_2)]
 
     # block before next section
     [ray.get(x) for x in split_funcs]
@@ -93,18 +92,18 @@ def main(file_name_1,file_name_2):
     # TODO: Clone https://github.com/tyiannak/pyAudioAnalysis.git
     #       Audio analysis tool
 
+
 if __name__ == '__main__':
-    
     # Take args and split video/audio into seperate files
     # if len(sys.argv) < 3:
     #     print("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/class1facingstudents.mov\" \"path/to/teacher_lecture.mov\"")
     #     sys.exit()
     data_dir = utils.get_data_dir()
-    teacher = os.path.join(data_dir,'racket.mkv')
-    students = os.path.join(data_dir,'class1facingstudents.mov')
+    teacher = os.path.join(data_dir, 'racket.mkv')
+    students = os.path.join(data_dir, 'class1facingstudents.mov')
     
-    file_path1 = students# sys.argv[1] 
-    file_path2 = teacher# sys.argv[2]
+    file_path1 = students  # sys.argv[1]
+    file_path2 = teacher   # sys.argv[2]
     main(file_path1, file_path2)
     # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
     print("ALL DONE")
