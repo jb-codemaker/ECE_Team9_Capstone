@@ -22,7 +22,7 @@ def student_attentiveness():
 
     for i in range(len(list_of_files)):
         img = cv2.imread(student_directory + delimiter + list_of_files[i])
-        print(student_directory + delimiter + list_of_files[i])
+        # print(student_directory + delimiter + list_of_files[i])
         if i == 0:
             student_list = student_img.initial_frame(img)
         for student in student_list:
