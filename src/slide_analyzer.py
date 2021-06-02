@@ -55,16 +55,19 @@ def analyze_lecture():
         previous_slide = slide
     
     word_count_and_name = [[int(x.word_count), int(x.name)] for x in slide_list]
-    # TODO(#24): instead of saving individual csv's we will update one
+    total_slides = len(set([x.name for x in slide_list]))
     
     delimiter = utils.get_delimiter()
     data_directory = utils.get_data_dir()
+    
+    with open(data_directory + delimiter + 'total_slides.txt','w') as f:
+        f.write(str(total_slides))
+    
     np.savetxt(data_directory + delimiter + 'slide.csv', word_count_and_name, delimiter=',', fmt='%d')
     return slide_list
 
 
 # check if current slide is the same as last slide
-# corrilation matrix
 def check_if_same_slide(previous_slide, current_slide):
     """the object has the previous slide and the img is the current slide. if the two are the same update the object
 
