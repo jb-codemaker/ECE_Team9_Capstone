@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from contours import corners_in_contour, get_outer_corners
 
-
 def make_border(img):
     """makes an image with a border
 

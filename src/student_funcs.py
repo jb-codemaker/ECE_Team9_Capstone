@@ -1,4 +1,4 @@
-from math_funcs import make_vect, get_magnitude
+from math_funcs import make_vect, get_magnitude, dot_product
 import math
 
 def get_angle(student):
@@ -23,8 +23,6 @@ def get_angle(student):
     reference_mag = get_magnitude(reference_vec)
 
     ## dot product
-    dot_product = lambda a, b: (a[0] * b[0]) + (a[1] * b[1])
-
     attention_reference_dot = dot_product(attention_vec, reference_vec)
     
     angle = int(math.degrees(math.acos(attention_reference_dot/(attention_mag*reference_mag))))
@@ -67,7 +65,6 @@ def get_attention_per_frame(student):
             attention_angle_per_frame.append(.000001)
         else:
             attention_angle_per_frame.append(1 - i)
-    
 
     student.attention_angle_per_frame = attention_angle_per_frame
 

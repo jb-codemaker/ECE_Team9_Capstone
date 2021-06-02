@@ -95,15 +95,15 @@ def main(file_name_1, file_name_2):
 
 if __name__ == '__main__':
     # Take args and split video/audio into seperate files
-    # if len(sys.argv) < 3:
-    #     print("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/class1facingstudents.mov\" \"path/to/teacher_lecture.mov\"")
-    #     sys.exit()
-    data_dir = utils.get_data_dir()
-    teacher = os.path.join(data_dir, 'racket.mkv')
-    students = os.path.join(data_dir, 'class1facingstudents.mov')
+    if len(sys.argv) < 3:
+        print("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/class1facingstudents.mov\" \"path/to/teacher_lecture.mov\"")
+        sys.exit()
+    # data_dir = utils.get_data_dir()
+    # teacher = os.path.join(data_dir, 'racket.mkv')
+    # students = os.path.join(data_dir, 'class1facingstudents.mov')
     
-    file_path1 = students  # sys.argv[1]
-    file_path2 = teacher   # sys.argv[2]
+    file_path1 = sys.argv[1]
+    file_path2 = sys.argv[2]
     main(file_path1, file_path2)
     # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
     print("ALL DONE")

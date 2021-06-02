@@ -95,7 +95,7 @@ if __name__ == '__main__':
     import split_video
     import time
     start_time = time.time()
-    lecture = "racket.mkv"
+    lecture = "Constraints_and_Hallucinations.mp4"
     file_path = os.path.join(utils.get_data_dir(), lecture)
     split_video.split(file_path, "teacher")
     slide_list = analyze_lecture()
