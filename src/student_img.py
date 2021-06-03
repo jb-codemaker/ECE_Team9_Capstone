@@ -83,19 +83,18 @@ def find_new_students(student_list, next_frame, index):
         box = utils.extend_box(top_left, bottom_right, 50)
         
         for student in student_list:
-            test_top_left = student.face_points['left_eye']
-            test_bottom_right = student.face_points['mouth_right']
+            test_point = student.face_points['nose']
             
             # cv2.circle(img, test_top_left,1,(0,0,255),2)
             # cv2.circle(img, test_bottom_right,1,(0,0,255),2)
             # cv2.rectangle(img, extended_top_left, extended_bottom_right, (255,255,0),1)
             # utils.show_image(img)
 
-            if utils.point_in_box(box, test_top_left) and utils.point_in_box(box, test_bottom_right):
+            if utils.point_in_box(box, test_point):
                 found = True
                 break
                         
-        if found:
+        if not found:
             max_name = max([int(x.name) + 1 for x in student_list])
             attention_list = [random.randint(1, 359) for i in range(index + 1)]
             student_list.append(Student(face, max_name))
