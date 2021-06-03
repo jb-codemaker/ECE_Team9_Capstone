@@ -1,5 +1,6 @@
 from math_funcs import make_vect, get_magnitude, dot_product
 import math
+import utils
 
 def get_angle(student):
     """gets the angle of the slope of the points (best we could do), appends that angle to angle list
@@ -84,3 +85,30 @@ def check_for_absent(student_list):
         if student.absent_from_frame >= 10:
             student_list.pop(i)
         i += 1
+
+
+def check_for_duplicate(student_list):
+    """checks if the student is represented more than once then, if so it removes student
+
+    Args:
+       student_list: list of student objects
+
+    Returns:
+        updated student list
+
+    """
+    bad_list = []
+    for i in range(len(student_list)):
+        for j in range(i + 1, len(student_list)):
+            top_left = student_list[j].face['keypoints']['left_eye']
+            bottom_right = student_list[j].face['keypoints']['mouth_right']
+            box = utils.extend_box(top_left, bottom_right, 10)
+            
+            if utils.point_in_box(box, student_list[i].face_points['nose']):
+                if student_list[i].present_in_frame < student_list[j].present_in_frame:
+                    bad_student = student_list[i]
+                else:
+                    bad_student = student_list[j]
+                bad_list.append(bad_student)
+    good_list = [i for i in student_list if i not in bad_list]
+    return good_list

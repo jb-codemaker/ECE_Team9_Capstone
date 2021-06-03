@@ -60,7 +60,7 @@ def find_student_next_frame(student, next_image):
         get_pose_direction(student, next_image)
         get_angle(student)
         student.absent_from_frame = 0
-
+        student.present_in_frame += 1
 
 def find_new_students(student_list, next_frame, index):
     """looks for new students and appends them to student_list

@@ -42,7 +42,8 @@ class Student:
         self.mode_attention_angle = 0
         self.attention_angle_per_frame = []
         self.absent_from_frame = 0
-
+        self.present_in_frame = 0
+        
     @property
     def update_face(self):
        self.face = face
