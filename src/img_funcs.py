@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from contours import corners_in_contour, get_outer_corners
 
+
 def make_border(img):
     """makes an image with a border
 
@@ -111,7 +112,7 @@ def image_similarity(image1, image2):
         boolian: if slide is same true
     
     """
-    ones = np.ones((55, 55)) 
+    ones = np.ones((33, 33)) 
     scalar = ones.shape[0] ** 2
     kernel = ones / scalar
     

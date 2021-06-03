@@ -24,7 +24,9 @@ if debug:
     debug_dir = utils.get_screenshot_dir() + delimiter + 'debug' + delimiter + 'face_analyzer'
     if not os.path.exists(debug_dir):
         os.makedirs(debug_dir)
-        
+
+detector = MTCNN()
+
 
 def find_student_next_frame(student, next_image):
     """finds student in next frame and updates student attributes
@@ -85,9 +87,9 @@ def find_new_students(student_list, next_frame, index):
         for student in student_list:
             test_point = student.face_points['nose']
             
-            # cv2.circle(img, test_top_left,1,(0,0,255),2)
-            # cv2.circle(img, test_bottom_right,1,(0,0,255),2)
-            # cv2.rectangle(img, extended_top_left, extended_bottom_right, (255,255,0),1)
+            # img = next_frame.copy()
+            # cv2.circle(img, test_point,1,(0,0,255),2)
+            # cv2.rectangle(img, box[0], box[1], (255,255,0),1)
             # utils.show_image(img)
 
             if utils.point_in_box(box, test_point):
@@ -152,6 +154,12 @@ def get_pose_direction(student,img):
         
         cv2.line(img, student.attention_points[0], student.attention_points[1], (255, 0, 0), 2)
         cv2.line(img, student.reference_points[0], student.reference_points[1], (0, 255, 0), 2)
+        cv2.circle(img, student.face_points['nose'],2,(0,0,255),2)
+        cv2.circle(img, student.face_points['left_eye'],2,(0,0,255),2)
+        cv2.circle(img, student.face_points['right_eye'],2,(0,0,255),2)
+        cv2.circle(img, student.face_points['mouth_left'],2,(0,0,255),2)
+        cv2.circle(img, student.face_points['mouth_right'],2,(0,0,255),2)
+
         cv2.imwrite(debug_dir + delimiter + 'pinocchio-'+str(pinocchio)+'.jpg', img)
         pinocchio += 1
 
@@ -168,8 +176,7 @@ def find_faces(img):
     min_conf = 0.9
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     pixels = np.asarray(img)
-
-    detector = MTCNN()
+    global detector
 
     detected = detector.detect_faces(pixels)
     faces = [i for i in detected if i['confidence'] >= min_conf]
