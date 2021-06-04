@@ -64,7 +64,21 @@ sudo apt install swig ffmpeg tesseract-ocr tesseract-ocr-eng
 ```
 easy
 
-#### Python Environment 
+
+### Windows install
+1. Download FFmpeg
+
+[ffmpeg](https://ffmpeg.org/) needs to be installed and added to your [path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
+
+2. install swig
+[swig](http://www.swig.org/Doc1.3/Windows.html) and add it to your path
+
+3. [tesseract](https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v4.0.0-rc3.20181014.exe)
+
+[here](https://medium.com/quantrium-tech/installing-and-using-tesseract-4-on-windows-10-4f7930313f82) is a good install instructions
+
+## Python Environment
+
 1. install conda
 
 It is a good idea to not run your systems python, especially when working with tensorflow. So set up a virtual environment with conda.
@@ -84,7 +98,7 @@ pip --upgrade tensorflow==2.5.0 tensorflow-gpu==2.5.0
 
 Now you should see that you are no longer based but now in the (tf) environment. now you can go ahead to the get code section below
 
-##### double check tensorflow
+### double check tensorflow
 
 tensorflow is an absolute nightmare to set up (although it is getting better), so try running this
 
@@ -108,12 +122,6 @@ pip install -U tensorflow==2.5.0 tensorflow-gpu==2.5.0
 ```
 
 dont ask me why [this](https://github.com/tensorflow/text/issues/385) works, try not to get frustrated over setting up tensorflow google is a small company and is trying its best
-
-### Windows install
-1. Download FFmpeg
-
-[ffmpeg](https://ffmpeg.org/) needs to be installed and added to your [path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
-
 
 ## Get Code
 
