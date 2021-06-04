@@ -1,11 +1,6 @@
 import cv2
-import subprocess
-import numpy
-import datetime
-import cv2
-import numpy as np
 import os
-import sys
+
 
 def show_image(img, annotation="image"):
     """quickly show image for debugging

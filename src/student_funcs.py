@@ -2,6 +2,7 @@ from math_funcs import make_vect, get_magnitude, dot_product
 import math
 import utils
 
+
 def get_angle(student):
     """gets the angle of the slope of the points (best we could do), appends that angle to angle list
 
@@ -103,7 +104,7 @@ def check_for_duplicate(student_list):
             top_left = student_list[j].face['keypoints']['left_eye']
             bottom_right = student_list[j].face['keypoints']['mouth_right']
             box = utils.extend_box(top_left, bottom_right, 10)
-            
+
             if utils.point_in_box(box, student_list[i].face_points['nose']):
                 if student_list[i].present_in_frame < student_list[j].present_in_frame:
                     bad_student = student_list[i]

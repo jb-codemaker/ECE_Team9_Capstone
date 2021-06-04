@@ -12,7 +12,7 @@ def make_vect(point1, point2):
         vector of 2 points (tuple)
 
     """
-   
+
     return ((point2[0] - point1[0]), (point2[1] - point1[1]))
 
 

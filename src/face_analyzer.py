@@ -55,8 +55,8 @@ if __name__ == '__main__':
     from split_video import split
     import time
     start_time = time.time()
-    lecture = 'class1facingstudents.mov'
-    file_path = os.path.join(utils.get_data_dir(),lecture)
-    split(file_path, 'students')
+    # lecture = 'class1facingstudents.mov'
+    # file_path = os.path.join(utils.get_data_dir(),lecture)
+    # split(file_path, 'students')
     student_list = student_attentiveness()
-    print(time.time() - start_time)
+    print((time.time() - start_time)/60)

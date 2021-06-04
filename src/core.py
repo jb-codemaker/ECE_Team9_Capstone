@@ -97,13 +97,12 @@ if __name__ == '__main__':
     # Take args and split video/audio into seperate files
     if len(sys.argv) < 3:
         print("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/class1facingstudents.mov\" \"path/to/teacher_lecture.mov\"")
-        sys.exit()
-    # data_dir = utils.get_data_dir()
-    # teacher = os.path.join(data_dir, 'racket.mkv')
-    # students = os.path.join(data_dir, 'class1facingstudents.mov')
-    
+    #     sys.exit()
+    import time
+    start_time = time.time() 
     file_path1 = sys.argv[1]
     file_path2 = sys.argv[2]
     main(file_path1, file_path2)
     # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
     print("ALL DONE")
+    print((time.time() - start_time) / 60)

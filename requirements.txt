@@ -1,1 +1,8 @@
-# dummy requirements.txt
+ray==1.3.0
+mtcnn==0.1.0
+pocketsphinx==0.1.15
+SpeechRecognition==3.8.1
+resemblyzer==0.1.1.dev0
+pytesseract==0.3.7
+tensorflow==2.5.0
+tensorflow-gpu==2.5.0
