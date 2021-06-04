@@ -17,7 +17,8 @@ import audio_model      # Diarizes and counts
 import utils
 import face_analyzer
 import slide_analyzer
-from visualize_data import visualize
+from visualize_data import proto
+import truncate_data
 
 
 def main(file_name_1, file_name_2):
@@ -106,3 +107,5 @@ if __name__ == '__main__':
     # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
     print("ALL DONE")
     print((time.time() - start_time) / 60)
+    truncate_data.truncate()
+    proto()

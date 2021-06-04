@@ -63,7 +63,7 @@ def analyze_lecture():
     with open(data_directory + delimiter + 'total_slides.txt','w') as f:
         f.write(str(total_slides))
     
-    np.savetxt(data_directory + delimiter + 'slide.csv', word_count_and_name, delimiter=',', fmt='%d')
+    np.savetxt(data_directory + delimiter + 'slide.csv', word_count_and_name, delimiter=',', fmt='%d', header='word_count,name')
     return slide_list
 
 
@@ -95,9 +95,9 @@ if __name__ == '__main__':
     import split_video
     import time
     start_time = time.time()
-    lecture = "Constraints_and_Hallucinations.mp4"
-    file_path = os.path.join(utils.get_data_dir(), lecture)
-    split_video.split(file_path, "teacher")
+    #lecture = "Constraints_and_Hallucinations.mp4"
+    #file_path = os.path.join(utils.get_data_dir(), lecture)
+    #split_video.split(file_path, "teacher")
     slide_list = analyze_lecture()
     print(time.time() - start_time)
     # text = [x.text for x in slide_list]

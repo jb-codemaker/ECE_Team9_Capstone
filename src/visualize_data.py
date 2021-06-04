@@ -2,6 +2,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
 from matplotlib.widgets import CheckButtons
+import utils
 
 def visualize(file_name):
 
@@ -134,6 +135,28 @@ def visualize(file_name):
 
     plt.show()
 
-if __name__ == "__main__":
+def proto():
+    data_dir = utils.get_data_dir()
+    delimiter = utils.get_delimiter()
+    test = pd.read_csv(data_dir + delimiter + "all_data.csv")
+    test = test.drop(['Seconds_wpm'],axis=1)
+    fig, ax = plt.subplots()
+    ax3 = ax.twinx()
+    rspine = ax3.spines['right']
+    rspine.set_position(('axes',1.15))
+    ax3.set_frame_on(True)
+    ax3.patch.set_visible(False)
+    ax3.set_ylabel('attentiveness')
+    ax.set_xlabel('1 tick = 10sec')
+    fig.subplots_adjust(right=0.7)
 
-    visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
+    test.Attentiveness.plot(ax=ax3, style='b-', label='Attentiveness')
+    test.Word_count.plot(ax=ax, style='r-', label='slide word count')
+    test.WPM.plot(ax=ax, style='g-', label='Words per minute')
+    ax.legend()
+    ax3.legend(loc='lower right')
+    plt.show()
+
+if __name__ == "__main__":
+    proto()
+    # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
