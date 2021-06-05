@@ -195,6 +195,6 @@ if __name__ == '__main__':
         file_path = sys.argv[1]
         perspective = sys.argv[2]
     except:
-        Exception("Provide a path to lecture and perspective\nperspective: students or teacher")
+        raise Exception("Provide a path to lecture and perspective\nperspective: students or teacher")
     split(file_path, perspective)
     audio_analyze()

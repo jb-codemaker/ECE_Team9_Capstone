@@ -102,7 +102,7 @@ if __name__ == '__main__':
         file_path1 = sys.argv[1]
         file_path2 = sys.argv[2]
     except:
-        Exception("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/student_lecture.mov\" \"path/to/teacher_lecture.mov\"")
+        raise Exception("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/student_lecture.mov\" \"path/to/teacher_lecture.mov\"")
     main(file_path1, file_path2)
     print("ALL DONE")
     print((time.time() - start_time) / 60)

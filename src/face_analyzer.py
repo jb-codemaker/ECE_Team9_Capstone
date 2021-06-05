@@ -67,7 +67,7 @@ if __name__ == '__main__':
     try:
         file_path = sys.argv[1]
     except:
-        Exception("ERROR: please provide a path to the student lecture\npython face_analyzer.py \"path/to/student_lecture.mov\"")
+       raise Exception("ERROR: please provide a path to the student lecture\npython face_analyzer.py \"path/to/student_lecture.mov\"")
         
     split(file_path, 'students')
     student_list = student_attentiveness()

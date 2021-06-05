@@ -60,5 +60,5 @@ if __name__ == '__main__':
         file_path = sys.argv[1]
         perspective = sys.argv[2]
     except:
-        Exception(("please provide a lecture path and a perspective \n perspective: student or teacher \n python split_video.py \"path/to/lecture.mov\" \"perspective\""))
+        raise Exception(("please provide a lecture path and a perspective \n perspective: student or teacher \n python split_video.py \"path/to/lecture.mov\" \"perspective\""))
     split(file_path, perspective)
