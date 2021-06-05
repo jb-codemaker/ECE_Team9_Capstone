@@ -17,7 +17,7 @@ import audio_model      # Diarizes and counts
 import utils
 import face_analyzer
 import slide_analyzer
-from visualize_data import proto
+from visualize_data import visualize
 import truncate_data
 
 
@@ -96,16 +96,19 @@ def main(file_name_1, file_name_2):
 
 if __name__ == '__main__':
     # Take args and split video/audio into seperate files
-    if len(sys.argv) < 3:
-        print("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/class1facingstudents.mov\" \"path/to/teacher_lecture.mov\"")
-    #     sys.exit()
     import time
-    start_time = time.time() 
-    file_path1 = sys.argv[1]
-    file_path2 = sys.argv[2]
+    start_time = time.time()
+    try:
+        file_path1 = sys.argv[1]
+        file_path2 = sys.argv[2]
+    except:
+        Exception("needs files for students: file_name_1, and teacher: file_name_2 \n python core.py \"path/to/student_lecture.mov\" \"path/to/teacher_lecture.mov\"")
     main(file_path1, file_path2)
-    # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
     print("ALL DONE")
     print((time.time() - start_time) / 60)
+    
     truncate_data.truncate()
-    proto()
+    data_dir = utils.get_data_dir()
+    delimiter = utils.get_delimiter()
+    file_name = data_dir + delimiter + "all_data.csv"
+    visualize(file_name)

@@ -190,7 +190,11 @@ def audio_analyze():
 
 if __name__ == '__main__':
     from split_video import split
-    data_dir = utils.get_data_dir()
-    file_path = os.path.join(data_dir, 'class1facingstudents.mov')
-    split(file_path,'students')
+    import sys
+    try:
+        file_path = sys.argv[1]
+        perspective = sys.argv[2]
+    except:
+        Exception("Provide a path to lecture and perspective\nperspective: students or teacher")
+    split(file_path, perspective)
     audio_analyze()

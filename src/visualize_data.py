@@ -8,12 +8,13 @@ def visualize(file_name):
 
     # Enter CSV to process:
     word_count = pd.read_csv(file_name)
-
+    word_count =word_count.dropna()
     # Redefine the dataset
-    professor = word_count[word_count['Speaker'] == 'A']
-    students = word_count[word_count['Speaker'] == 'B']
+    professor = word_count[word_count['Speaker'] == 'Professor']
+    students = word_count[word_count['Speaker'] == 'Student']
     #minute_A = professor['Minute']
     speaker_A = professor['WPM']
+
     #minute_B = students['Minute']
     speaker_B = students['WPM'] 
 
@@ -38,9 +39,9 @@ def visualize(file_name):
     # Colorful Title
     fig.text(0.45, 0.95, "Word Count", ha="center", va="bottom", size="large",color="blue")
     fig.text(0.52, 0.95, "&", ha="center", va="bottom", size="large")
-    fig.text(0.6, 0.95, "Ranked Complexity", ha="center", va="bottom", size="large" ,color="red")
+    fig.text(0.6, 0.95, "Slide Word Count", ha="center", va="bottom", size="large" ,color="red")
     fig.text(0.68, 0.95, "&", ha="center", va="bottom", size="large")
-    fig.text(0.75,0.95,"Attentiveness", ha="center", va="bottom", size="large",color="green")
+    fig.text(0.75,0.95, "Attentiveness", ha="center", va="bottom", size="large",color="green")
 
     # Word Count 
     ax1 = ax.twinx()
@@ -62,14 +63,14 @@ def visualize(file_name):
     ax3.yaxis.set_label_position('left')
 
     # plot all the lines
-    P1, = ax1.plot(result['index'], result['AWPM'],'--', color ='blue',label = 'Professor', visible = False)
-    P2, = ax1.plot(result['index'], result['BWPM'],color ='blue',label = 'Students', visible = False)
-    P3, = ax2.plot(word_count['Minute'], word_count['Attentiveness'], color = 'green',label = 'complex', visible = False)
-    P4, = ax3.plot(word_count['Minute'], word_count['Ranked Complexity'], color = 'red',label = 'Ranked Complexity', visible = False)
+    P1, = ax1.plot(word_count['Seconds_wpm'], result['AWPM'],'--', color ='blue',label = 'Professor', visible = False)
+    P2, = ax1.plot(word_count['Seconds_wpm'], result['BWPM'],color ='blue',label = 'Students', visible = False)
+    P3, = ax2.plot(word_count['Seconds_wpm'], word_count['Attentiveness'], color = 'green',label = 'complex', visible = False)
+    P4, = ax3.plot(word_count['Seconds_wpm'], word_count['Word_count'], color = 'red',label = 'Slide Word Count', visible = False)
 
     # Check Button
     plt.subplots_adjust(left=0.25, bottom=0.1,right=0.95, top=0.95) 
-    labels = ['Professor Word Count', 'Students Word Count', 'Students Attentiveness', 'Ranked Complexity' ]
+    labels = ['Professor Word Count', 'Students Word Count', 'Students Attentiveness', 'Slide Word Count' ]
     activated = [False, False, False, False]
     axCheckButton  = plt.axes([0.03,0.4,0.15,0.15])
     chxbox = CheckButtons(axCheckButton, labels, activated)
@@ -80,7 +81,7 @@ def visualize(file_name):
         lines = [P1, P2, P3, P4]
         lines[index].set_visible(not lines[index].get_visible())
 
-        if label == 'Ranked Complexity':
+        if label == 'Slide Word Count':
             activated[3] = not(activated[3])
 
         if label =='Students Attentiveness':
@@ -94,10 +95,10 @@ def visualize(file_name):
 
         # Ranked Complexity
         if activated[3] == False:
-            ax3.set_ylabel('Ranked Complexity',color ='red', visible = False)
+            ax3.set_ylabel('Slide Word Count',color ='red', visible = False)
             ax3.set_visible(False)
         else:
-            ax3.set_ylabel('Ranked Complexity',color ='red', visible = True)
+            ax3.set_ylabel('Slide Word Count',color ='red', visible = True)
             ax3.set_visible(True)
             
 
@@ -135,28 +136,10 @@ def visualize(file_name):
 
     plt.show()
 
-def proto():
-    data_dir = utils.get_data_dir()
-    delimiter = utils.get_delimiter()
-    test = pd.read_csv(data_dir + delimiter + "all_data.csv")
-    test = test.drop(['Seconds_wpm'],axis=1)
-    fig, ax = plt.subplots()
-    ax3 = ax.twinx()
-    rspine = ax3.spines['right']
-    rspine.set_position(('axes',1.15))
-    ax3.set_frame_on(True)
-    ax3.patch.set_visible(False)
-    ax3.set_ylabel('attentiveness')
-    ax.set_xlabel('1 tick = 10sec')
-    fig.subplots_adjust(right=0.7)
-
-    test.Attentiveness.plot(ax=ax3, style='b-', label='Attentiveness')
-    test.Word_count.plot(ax=ax, style='r-', label='slide word count')
-    test.WPM.plot(ax=ax, style='g-', label='Words per minute')
-    ax.legend()
-    ax3.legend(loc='lower right')
-    plt.show()
-
 if __name__ == "__main__":
-    proto()
-    # visualize(r"ECE_Team9_Capstone\data\Sample_csv.csv")
+    import sys
+    try:
+        file_path = sys.argv[1]
+    except:
+        Exception("Provide path to all_data.csv")
+    visualize(file_path)

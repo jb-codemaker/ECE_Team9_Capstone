@@ -40,6 +40,9 @@ def split(file_name, perspective):
         shutil.rmtree(data_directory + delimiter + "audio")
     ###################################
     
+    if not os.path.exists(screenshot_dir):
+        os.mkdir(screenshot_dir)
+        
     if not os.path.exists(screenshot_dir + delimiter + perspective):
         os.mkdir(screenshot_dir + delimiter + perspective)
         
@@ -52,19 +55,10 @@ def split(file_name, perspective):
     return perspective
 
 if __name__ == '__main__':
-    file_name = 'class1facingstudents.mov'
-    data_directory = utils.get_data_dir()
-    file_path = os.path.join(data_directory, file_name)
-    split(file_path, 'students')
-    
-    '''
-    if len(sys.argv) < 3:
-        print("\nFile and Perspective 1 or 2 is needed")
-        sys.exit()
-    file_name = sys.argv[1]
-    perspective = sys.argv[2]
-    split(file_name, perspective)
-
-    print("\nSplit function complete\n")
-
-    '''
+    import sys
+    try:
+        file_path = sys.argv[1]
+        perspective = sys.argv[2]
+    except:
+        Exception(("please provide a lecture path and a perspective \n perspective: student or teacher \n python split_video.py \"path/to/lecture.mov\" \"perspective\""))
+    split(file_path, perspective)

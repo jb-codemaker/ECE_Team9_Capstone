@@ -5,6 +5,8 @@ import utils
 import student_img
 import student_funcs
 
+debug = False
+
 
 def student_attentiveness():
     """gets the student attentiveness for the lecture
@@ -22,19 +24,25 @@ def student_attentiveness():
 
     for i in range(len(list_of_files)):
         img = cv2.imread(student_directory + delimiter + list_of_files[i])
-        # print(student_directory + delimiter + list_of_files[i])
+
         if i == 0:
             student_list = student_img.initial_frame(img)
         for student in student_list:
             try:
                 next_frame = cv2.imread(student_directory + delimiter + list_of_files[i+1])
+                # TODO: Fix redunancy here, find_student_next_frame and find_new_students essentially do the same thing
+                # without the crop and calling find faces again its way faster
                 student_img.find_student_next_frame(student, next_frame)
             except IndexError:
                 break
         student_img.find_new_students(student_list, next_frame, i + 1)
         student_funcs.check_for_absent(student_list)
         student_list = student_funcs.check_for_duplicate(student_list)
-        # print(len(student_list))
+        
+        global debug
+        if debug:
+            print(student_directory + delimiter + list_of_files[i])
+            print(len(student_list))
 
     # removes end of lecture noise
     student_list = [student for student in student_list if student.present_in_frame > len(list_of_files) * .50]
@@ -54,9 +62,13 @@ def student_attentiveness():
 if __name__ == '__main__':
     from split_video import split
     import time
+    import sys
     start_time = time.time()
-    # lecture = 'class1facingstudents.mov'
-    # file_path = os.path.join(utils.get_data_dir(),lecture)
-    # split(file_path, 'students')
+    try:
+        file_path = sys.argv[1]
+    except:
+        Exception("ERROR: please provide a path to the student lecture\npython face_analyzer.py \"path/to/student_lecture.mov\"")
+        
+    split(file_path, 'students')
     student_list = student_attentiveness()
     print((time.time() - start_time)/60)

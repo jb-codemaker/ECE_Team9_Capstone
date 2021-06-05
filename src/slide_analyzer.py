@@ -89,15 +89,15 @@ def check_if_same_slide(previous_slide, current_slide):
 
 
 if __name__ == '__main__':
-    ###### IMPORTANT #########
-    # youtube-dl https://www.youtube.com/watch?v=mwxknB4SgvM&t=792s #
-    # move into data directory and name it Constraints_and_Hallucinations.mp4 #
     import split_video
     import time
+    import sys
     start_time = time.time()
-    #lecture = "Constraints_and_Hallucinations.mp4"
-    #file_path = os.path.join(utils.get_data_dir(), lecture)
-    #split_video.split(file_path, "teacher")
+    try:
+        file_path = sys.argv[1]
+    except:
+        raise Exception("No file_path please provide a path to the teacher lecture\n python slide_analyzer.py \"path/to/slide_lecture.mov\"")
+    
+    split_video.split(file_path, "teacher")
     slide_list = analyze_lecture()
     print(time.time() - start_time)
-    # text = [x.text for x in slide_list]
