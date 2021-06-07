@@ -67,6 +67,7 @@ def visualize(file_name):
     P2, = ax1.plot(word_count['Seconds_wpm'], result['BWPM'],color ='blue',label = 'Students', visible = False)
     P3, = ax2.plot(word_count['Seconds_wpm'], word_count['Attentiveness'], color = 'green',label = 'complex', visible = False)
     P4, = ax3.plot(word_count['Seconds_wpm'], word_count['Word_count'], color = 'red',label = 'Slide Word Count', visible = False)
+    ax3.yaxis.labelpad=20
 
     # Check Button
     plt.subplots_adjust(left=0.25, bottom=0.1,right=0.95, top=0.95) 
@@ -95,7 +96,7 @@ def visualize(file_name):
 
         # Ranked Complexity
         if activated[3] == False:
-            ax3.set_ylabel('Slide Word Count',color ='red', visible = False)
+            ax3.set_ylabel('Slide Word Count',color ='red', visible = False, labelpad=20)
             ax3.set_visible(False)
         else:
             ax3.set_ylabel('Slide Word Count',color ='red', visible = True)
