@@ -77,9 +77,9 @@ easy
 
 [here](https://medium.com/quantrium-tech/installing-and-using-tesseract-4-on-windows-10-4f7930313f82) is a good install instructions
 
-## Python Environment
+## Python Environment Linux
 
-1. install conda
+Install conda
 
 It is a good idea to not run your systems python, especially when working with tensorflow. So set up a virtual environment with conda.
 ```
@@ -130,24 +130,21 @@ git clone https://github.com/jb-codemaker/ECE_Team9_Capstone.git
 pip install -r requirements.txt
 ```
 
-
-## Geting started
-1. Set up the camera
-
-A camera needs to be pointed directly at the students' faces. And also need to record the PPT of class (or projector).
-
-2. Audio from class
-
-The audio should record the whole class, includ professor's voice and students' voice. 
-
-3. Input all the data into our project
-
-Our program will use the vedio stuff and audio stuff as input, and then output a report back to users.
-
-## Example
-
-
 ## Usage
 
+First have two video files of a lecture, one facing the students and one facing the instructor. Move those files to the data directory. For this example the file facing the students will be called students.mov and the file facing the teacher will be called teacher.mov. To run the program you will need to do the following commands
 
+```
+cd src/
+python core.py ../data/students.mov ../data/teacher.mov
+```
 
+Thats it you should recieve a link to the ray dashboard. If you copy that and paste it in your browser you can see which sections of the program are running. Once the program is all done an interactive graph will show up
+
+[plot](Image/graph.png)
+
+if you dont want this to pop up automatically you will need to go into core.py and remove the line `visualize(file_name)` at the bottom. If you want to display this graph without running the entire program again simply run the command
+
+```
+python visualize_data.py ../data/all_data.csv
+```
