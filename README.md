@@ -141,7 +141,7 @@ python core.py ../data/students.mov ../data/teacher.mov
 
 Thats it you should recieve a link to the ray dashboard. If you copy that and paste it in your browser you can see which sections of the program are running. Once the program is all done an interactive graph will show up
 
-[plot](Image/graph.png)
+![plot](Image/graph.png)
 
 if you dont want this to pop up automatically you will need to go into core.py and remove the line `visualize(file_name)` at the bottom. If you want to display this graph without running the entire program again simply run the command
 
