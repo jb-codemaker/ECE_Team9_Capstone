@@ -8,7 +8,7 @@ def video_stream():
     """
     face_cascade = cv2.CascadeClassifier('/home/leo/Projects/ECE_Team9_Capstone/data/haarcascade_frontalface_default.xml')
     profile_cascade = cv2.CascadeClassifier('/home/leo/Projects/ECE_Team9_Capstone/data/haarcascade_profileface.xml')
-    capture = cv2.VideoCapture("/home/leo/Projects/ECE_Team9_Capstone/data/output.mp4")
+    capture = cv2.VideoCapture(0)
     
     while(True):
         
